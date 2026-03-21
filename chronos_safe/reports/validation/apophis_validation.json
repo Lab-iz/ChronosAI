@@ -1,0 +1,49 @@
+{
+  "fixture_name": "apophis/apophis_fixture.json",
+  "steps": 180,
+  "dt_days": 1.0,
+  "hybrid_metrics": {
+    "steps": 180.0,
+    "energy_drift": 2.098199086463821e-08,
+    "angular_momentum_drift": 1.2808042512821228e-16,
+    "earth_apophis_distance_final_au": 1.492800210637942
+  },
+  "comparison_metrics": {
+    "mean_position_error_au": 0.000127252711090645,
+    "final_position_error_au": 0.00038646756297066085,
+    "mean_velocity_error_au_day": 3.434878061732233e-06,
+    "final_velocity_error_au_day": 7.906915378735502e-06,
+    "earth_apophis_distance_error_au": 0.00017358013690116358
+  },
+  "fallback_count": 0,
+  "fallback_events": [],
+  "benchmark": {
+    "reference": {
+      "name": "reference",
+      "runtime_seconds": 1.161747500009369,
+      "metrics": {
+        "steps": 180.0,
+        "energy_drift": 3.107618884194396e-12,
+        "angular_momentum_drift": 3.4581714784617316e-15,
+        "earth_apophis_distance_final_au": 1.4929737907748433
+      }
+    },
+    "hybrid": {
+      "name": "hybrid",
+      "runtime_seconds": 0.11583819999941625,
+      "metrics": {
+        "steps": 180.0,
+        "energy_drift": 2.098199086463821e-08,
+        "angular_momentum_drift": 1.2808042512821228e-16,
+        "earth_apophis_distance_final_au": 1.492800210637942,
+        "mean_position_error_au": 0.000127252711090645,
+        "final_position_error_au": 0.00038646756297066085,
+        "mean_velocity_error_au_day": 3.434878061732233e-06,
+        "final_velocity_error_au_day": 7.906915378735502e-06,
+        "earth_apophis_distance_error_au": 0.00017358013690116358,
+        "speedup_vs_reference": 10.029053455727244,
+        "fallback_rate": 0.0
+      }
+    }
+  }
+}
