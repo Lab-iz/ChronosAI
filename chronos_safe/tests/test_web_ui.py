@@ -5,6 +5,10 @@ def test_dashboard_html_contains_core_sections() -> None:
     html = render_dashboard_html()
     assert "CHRONOS-SAFE" in html
     assert "Comece aqui" in html
+    assert "O que esta ferramenta faz" in html
+    assert "Payload JSON editavel" in html
+    assert "Exemplo vermelho" in html
+    assert "Simular com estes dados" in html
     assert "Teste principal com Apophis" in html
     assert "trajectory-plot" in html
     assert "Modo avancado" in html

@@ -335,6 +335,123 @@ def render_dashboard_html() -> str:
       color: var(--muted);
     }
 
+    .explanation-panel {
+      margin-bottom: 18px;
+      display: grid;
+      gap: 16px;
+      background: linear-gradient(135deg, rgba(9, 22, 42, 0.88), rgba(5, 14, 27, 0.8));
+    }
+
+    .explanation-panel .summary-copy {
+      margin: 0;
+      max-width: 86ch;
+    }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .usage-item {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(8, 18, 34, 0.72);
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.9rem;
+    }
+
+    .usage-item strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 6px;
+      font-size: 0.96rem;
+    }
+
+    .simulator-panel {
+      margin-bottom: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .simulator-heading {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .simulator-copy {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 78ch;
+    }
+
+    .example-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      min-width: min(360px, 100%);
+    }
+
+    .example-actions button {
+      flex: 1 1 160px;
+      width: auto;
+    }
+
+    .simulation-controls {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .simulation-controls .wide {
+      grid-column: 1 / -1;
+    }
+
+    .payload-editor {
+      border: 1px solid rgba(108, 170, 255, 0.16);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(4, 16, 31, 0.82);
+    }
+
+    .payload-editor-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(108, 170, 255, 0.14);
+      background: rgba(77, 181, 255, 0.04);
+    }
+
+    .payload-editor-head h3 {
+      margin: 0;
+      font-size: 0.98rem;
+      font-family: var(--serif);
+    }
+
+    .payload-editor-head button {
+      width: auto;
+      flex: 0 0 auto;
+      padding: 9px 12px;
+    }
+
+    .simulation-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .simulation-actions button {
+      flex: 1 1 220px;
+      width: auto;
+    }
+
     details.advanced-shell {
       margin-top: 18px;
     }
@@ -408,7 +525,7 @@ def render_dashboard_html() -> str:
       color: var(--muted);
     }
 
-input, select, button {
+input, select, textarea, button {
       width: 100%;
       border-radius: 12px;
       border: 1px solid var(--line);
@@ -419,7 +536,19 @@ input, select, button {
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
     }
 
-    input:focus, select:focus {
+    textarea {
+      min-height: 156px;
+      resize: vertical;
+      border-radius: 0;
+      border: 0;
+      background: #04101f;
+      font-family: var(--mono);
+      line-height: 1.45;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: rgba(143, 221, 255, 0.44);
       box-shadow:
@@ -440,6 +569,11 @@ input, select, button {
     button.secondary {
       background: linear-gradient(135deg, #0d2b63, #2b95ff);
       box-shadow: 0 14px 28px rgba(13, 43, 99, 0.24);
+    }
+
+    button.danger {
+      background: linear-gradient(135deg, #8e1f2e, #ff6b73);
+      box-shadow: 0 14px 28px rgba(142, 31, 46, 0.24);
     }
 
     button:hover {
@@ -777,8 +911,20 @@ input, select, button {
     }
 
     @media (max-width: 980px) {
-      .hero, .grid, .row, .results-grid, .metric-grid, .guide-grid {
+      .hero,
+      .grid,
+      .row,
+      .results-grid,
+      .metric-grid,
+      .guide-grid,
+      .usage-grid,
+      .simulator-heading,
+      .simulation-controls {
         grid-template-columns: 1fr;
+      }
+
+      .simulation-controls .wide {
+        grid-column: auto;
       }
 
       .results-topline {
@@ -894,11 +1040,15 @@ input, select, button {
       }
 
       .summary-actions,
+      .example-actions,
+      .simulation-actions,
       .toolbar {
         gap: 8px;
       }
 
       .summary-actions button,
+      .example-actions button,
+      .simulation-actions button,
       .toolbar button {
         flex: 1 1 100%;
       }
@@ -988,6 +1138,33 @@ input, select, button {
       </article>
     </section>
 
+    <section class="panel explanation-panel">
+      <div>
+        <span class="results-kicker">O que esta ferramenta faz</span>
+        <h2>Simulacao orbital com leitura de risco</h2>
+        <p class="summary-copy">
+          O CHRONOS-SAFE ajuda a testar cenarios orbitais de forma visual. Voce escolhe um cenario, define quantos passos a simulacao deve rodar,
+          ajusta o tamanho do passo de tempo e, se quiser, conecta um modelo de IA treinado. A ferramenta desenha a trajetoria em 3D e transforma
+          os resultados tecnicos em uma leitura simples: verde quando o comportamento esta estavel, amarelo quando merece atencao e vermelho quando
+          o erro, o drift fisico ou os fallbacks indicam instabilidade.
+        </p>
+      </div>
+      <div class="usage-grid">
+        <div class="usage-item">
+          <strong>1. Configure os dados</strong>
+          Escolha o fixture, altere passos e dt, ou edite diretamente o JSON do payload antes de rodar.
+        </div>
+        <div class="usage-item">
+          <strong>2. Rode a simulacao</strong>
+          Use o botao de simulacao para enviar os dados ao backend e atualizar a orbita 3D.
+        </div>
+        <div class="usage-item">
+          <strong>3. Interprete o semaforo</strong>
+          Confira a cor do risco, os principais indicadores, os eventos de fallback e o JSON tecnico.
+        </div>
+      </div>
+    </section>
+
     <section class="panel summary-panel">
       <h2>Comece aqui</h2>
       <p class="summary-copy">
@@ -1004,6 +1181,55 @@ input, select, button {
       </p>
     </section>
 
+    <section class="panel simulator-panel">
+      <div class="simulator-heading">
+        <div>
+          <span class="results-kicker">Dados da simulacao</span>
+          <h2>Monte sua propria simulacao</h2>
+          <p class="simulator-copy">
+            Altere os parametros abaixo para testar outro numero de passos, outro intervalo de tempo ou outro artefato de IA. O JSON mostra exatamente
+            o que sera enviado para o endpoint de simulacao e tambem pode ser editado manualmente.
+          </p>
+        </div>
+        <div class="example-actions">
+          <button id="green-example-button" type="button">Exemplo verde</button>
+          <button id="red-example-button" type="button" class="danger">Exemplo vermelho</button>
+        </div>
+      </div>
+      <form id="simulate-form" class="simulation-controls">
+        <label>Fixture
+          <select name="fixture_name" data-select="fixtures"></select>
+        </label>
+        <label>Passos
+          <input type="number" name="steps" value="180" min="1">
+        </label>
+        <label>dt (dias)
+          <input type="number" name="dt_days" value="1.0" min="0.01" step="0.01">
+        </label>
+        <label>Checkpoint
+          <select name="checkpoint_path" data-select="checkpoints" data-allow-empty="true"></select>
+        </label>
+        <label>Scaler
+          <select name="scaler_path" data-select="scalers" data-allow-empty="true"></select>
+        </label>
+        <label>OOD guard
+          <select name="ood_guard_path" data-select="ood_guards" data-allow-empty="true"></select>
+        </label>
+        <div class="payload-editor wide">
+          <div class="payload-editor-head">
+            <h3>Payload JSON editavel</h3>
+            <button id="sync-payload-button" type="button" class="secondary">Atualizar JSON</button>
+          </div>
+          <textarea id="simulation-payload-editor" spellcheck="false"></textarea>
+        </div>
+        <div class="simulation-actions wide">
+          <button type="submit">Simular com estes dados</button>
+          <button id="run-payload-button" type="button" class="secondary">Rodar JSON editado</button>
+        </div>
+      </form>
+      <p class="hint">O exemplo verde usa a simulacao padrao estavel. O exemplo vermelho e demonstrativo: ele mostra como o relatorio fica quando drift e fallbacks passam do limite seguro.</p>
+    </section>
+
     <section class="panel visual-section">
       <div class="toolbar">
         <button id="preview-button" type="button">Ver demo 3D</button>
@@ -1016,7 +1242,7 @@ input, select, button {
     </section>
 
     <details class="advanced-shell">
-      <summary>Modo avancado: gerar dados, treinar IA e controlar a simulacao manualmente</summary>
+      <summary>Modo avancado: gerar dados, treinar IA e validar Apophis manualmente</summary>
       <div class="grid">
       <section class="panel">
         <h2>1. Criar dados de treino</h2>
@@ -1111,38 +1337,7 @@ input, select, button {
       </section>
 
       <section class="panel">
-        <h2>3. Rodar simulacao</h2>
-        <form id="simulate-form">
-          <div class="row">
-            <label>Fixture
-              <select name="fixture_name" data-select="fixtures"></select>
-            </label>
-            <label>Passos
-              <input type="number" name="steps" value="30" min="1">
-            </label>
-          </div>
-          <div class="row">
-            <label>dt (dias)
-              <input type="number" name="dt_days" value="1.0" min="0.01" step="0.01">
-            </label>
-            <label>Checkpoint
-              <select name="checkpoint_path" data-select="checkpoints" data-allow-empty="true"></select>
-            </label>
-          </div>
-          <div class="row">
-            <label>Scaler
-              <select name="scaler_path" data-select="scalers" data-allow-empty="true"></select>
-            </label>
-            <label>OOD guard
-              <select name="ood_guard_path" data-select="ood_guards" data-allow-empty="true"></select>
-            </label>
-          </div>
-          <button type="submit">Rodar simulacao</button>
-        </form>
-      </section>
-
-      <section class="panel">
-        <h2>4. Teste principal com Apophis</h2>
+        <h2>3. Teste principal com Apophis</h2>
         <form id="apophis-form">
           <div class="row">
             <label>Passos
@@ -1225,6 +1420,7 @@ input, select, button {
   <script>
     const state = { catalog: null };
     const orbitPalette = ["#ffd166", "#7dd3fc", "#38bdf8", "#3b82f6", "#60a5fa", "#22d3ee", "#a5b4fc", "#2dd4bf", "#93c5fd"];
+    const simulationFieldNames = ["fixture_name", "steps", "dt_days", "checkpoint_path", "scaler_path", "ood_guard_path"];
 
     function setStatus(message) {
       document.getElementById("status-box").textContent = message;
@@ -1556,6 +1752,102 @@ input, select, button {
       }
     }
 
+    function setFieldValueByName(formId, fieldName, value) {
+      const element = document.querySelector(`#${formId} [name="${fieldName}"]`);
+      if (!element) {
+        return;
+      }
+      const normalizedValue = value === null || value === undefined ? "" : String(value);
+      if (element.tagName === "SELECT") {
+        const optionExists = Array.from(element.options || []).some((option) => option.value === normalizedValue);
+        if (optionExists) {
+          element.value = normalizedValue;
+        }
+        return;
+      }
+      element.value = normalizedValue;
+    }
+
+    function simulationDefaults() {
+      return {
+        fixture_name: state.catalog?.defaults?.default_fixture || "apophis/apophis_fixture.json",
+        steps: 180,
+        dt_days: 1.0,
+        checkpoint_path: null,
+        scaler_path: null,
+        ood_guard_path: null,
+      };
+    }
+
+    function simulationPayloadFromForm() {
+      return formPayload("simulate-form", simulationDefaults());
+    }
+
+    function updateSimulationPayloadEditor(payload) {
+      const editor = document.getElementById("simulation-payload-editor");
+      if (!editor) {
+        return;
+      }
+      editor.value = JSON.stringify(payload || simulationPayloadFromForm(), null, 2);
+    }
+
+    function applySimulationPreset(values) {
+      const payload = { ...simulationDefaults(), ...values };
+      simulationFieldNames.forEach((fieldName) => setFieldValueByName("simulate-form", fieldName, payload[fieldName]));
+      updateSimulationPayloadEditor(payload);
+      return payload;
+    }
+
+    function readSimulationPayloadEditor() {
+      const editor = document.getElementById("simulation-payload-editor");
+      try {
+        return JSON.parse(editor.value || "{}");
+      } catch (error) {
+        setOutput({
+          error: `JSON invalido: ${error.message}`,
+          endpoint: "/simulate/trajectory",
+        });
+        setStatus(`Erro: JSON invalido (${error.message})`);
+        return null;
+      }
+    }
+
+    function buildRedExamplePayload() {
+      const frames = [
+        [[0, 0, 0], [1.0, 0.0, 0.0], [1.12, 0.04, 0.0]],
+        [[0, 0, 0], [0.78, 0.56, 0.02], [0.92, 0.78, 0.08]],
+        [[0, 0, 0], [0.18, 0.98, 0.05], [0.42, 1.28, 0.16]],
+        [[0, 0, 0], [-0.64, 0.72, 0.12], [-0.25, 1.58, 0.34]],
+        [[0, 0, 0], [-1.18, -0.1, 0.18], [0.28, 1.9, 0.58]],
+        [[0, 0, 0], [-0.42, -1.34, 0.3], [1.42, 2.18, 0.84]],
+      ];
+      return {
+        source: "exemplo_didatico_vermelho",
+        ids: ["Sun", "Earth", "Apophis"],
+        frames,
+        dt_days: 7.0,
+        metrics: {
+          energy_drift: 0.025,
+          angular_momentum_drift: 0.00024,
+          earth_apophis_distance_final_au: 2.18,
+        },
+        fallback_events: [
+          { step: 2, time_days: 14, reason: "energy_drift", affected_bodies: ["Sun", "Earth", "Apophis"], score: 0.91, action: "fallback_to_reference_engine" },
+          { step: 3, time_days: 21, reason: "angular_momentum_drift", affected_bodies: ["Sun", "Earth", "Apophis"], score: 0.94, action: "fallback_to_reference_engine" },
+          { step: 4, time_days: 28, reason: "speed_limit", affected_bodies: ["Apophis"], score: 0.97, action: "fallback_to_reference_engine" },
+          { step: 5, time_days: 35, reason: "distance_limit", affected_bodies: ["Earth", "Apophis"], score: 0.99, action: "fallback_to_reference_engine" },
+        ],
+        note: "Payload demonstrativo para mostrar o semaforo vermelho quando a simulacao acumula drift e varios fallbacks.",
+      };
+    }
+
+    function showRedExample() {
+      const payload = buildRedExamplePayload();
+      setOutput(payload);
+      renderTrajectory3D(payload);
+      setStatus("Exemplo vermelho carregado no relatorio; este exemplo e demonstrativo e nao foi enviado ao backend.");
+    }
+
     function applyTrainingArtifacts(payload) {
       if (!payload || !payload.checkpoint_path) {
         return;
@@ -1713,6 +2005,7 @@ input, select, button {
         const key = select.getAttribute("data-select");
         const allowEmpty = select.getAttribute("data-allow-empty") === "true";
         const values = catalog[key] || [];
+        const previousValue = select.value;
         select.innerHTML = "";
         if (allowEmpty) {
           const empty = document.createElement("option");
@@ -1732,6 +2025,11 @@ input, select, button {
           option.textContent = "(vazio)";
           select.appendChild(option);
         }
+        const desiredValue = previousValue || (key === "fixtures" ? catalog.defaults?.default_fixture : "");
+        const desiredOptionExists = Array.from(select.options || []).some((option) => option.value === desiredValue);
+        if (desiredValue && desiredOptionExists) {
+          select.value = desiredValue;
+        }
       });
       document.getElementById("fixtures-count").textContent = String((catalog.fixtures || []).length);
       document.getElementById("checkpoints-count").textContent = String((catalog.checkpoints || []).length);
@@ -1750,6 +2048,7 @@ input, select, button {
       state.catalog = payload;
       fillDefaults(payload);
       fillSelects(payload);
+      updateSimulationPayloadEditor();
       return payload;
     }
 
@@ -1845,6 +2144,15 @@ input, select, button {
       await callApi("/simulate/trajectory", payload, document.getElementById("preview-button"));
     });
 
+    document.getElementById("green-example-button").addEventListener("click", async () => {
+      const payload = applySimulationPreset(simulationDefaults());
+      await callApi("/simulate/trajectory", payload, document.getElementById("green-example-button"));
+    });
+
+    document.getElementById("red-example-button").addEventListener("click", () => {
+      showRedExample();
+    });
+
     document.getElementById("quick-demo-button").addEventListener("click", async () => {
       document.getElementById("preview-button").click();
     });
@@ -1867,6 +2175,33 @@ input, select, button {
 
     document.getElementById("clear-plot-button").addEventListener("click", () => {
       clearTrajectoryPlot();
+    });
+
+    document.getElementById("sync-payload-button").addEventListener("click", () => {
+      updateSimulationPayloadEditor();
+      setStatus("Payload JSON atualizado a partir dos campos da simulacao.");
+    });
+
+    document.getElementById("run-payload-button").addEventListener("click", async () => {
+      const payload = readSimulationPayloadEditor();
+      if (!payload) {
+        return;
+      }
+      await callApi("/simulate/trajectory", payload, document.getElementById("run-payload-button"));
+    });
+
+    document.getElementById("simulate-form").addEventListener("input", (event) => {
+      if (event.target?.id === "simulation-payload-editor") {
+        return;
+      }
+      updateSimulationPayloadEditor();
+    });
+
+    document.getElementById("simulate-form").addEventListener("change", (event) => {
+      if (event.target?.id === "simulation-payload-editor") {
+        return;
+      }
+      updateSimulationPayloadEditor();
     });
 
     bindForm("generalist-form", "/generate/generalist");
