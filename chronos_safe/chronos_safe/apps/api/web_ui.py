@@ -435,6 +435,11 @@ def render_dashboard_html() -> str:
       font-family: var(--serif);
     }
 
+    .payload-help {
+      margin: 4px 0 0;
+      max-width: 70ch;
+    }
+
     .payload-editor-head button {
       width: auto;
       flex: 0 0 auto;
@@ -523,6 +528,18 @@ def render_dashboard_html() -> str:
       gap: 6px;
       font-size: 0.92rem;
       color: var(--muted);
+    }
+
+    .field-title {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .field-help,
+    .payload-help {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.38;
     }
 
 input, select, textarea, button {
@@ -702,6 +719,64 @@ input, select, textarea, button {
       font-weight: 700;
       white-space: nowrap;
       color: var(--ink);
+    }
+
+    .risk-explain {
+      display: grid;
+      gap: 10px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(108, 170, 255, 0.16);
+      background: rgba(8, 18, 34, 0.72);
+    }
+
+    .risk-explain[data-level="green"] {
+      border-color: rgba(87, 239, 176, 0.2);
+      background: rgba(7, 36, 33, 0.34);
+    }
+
+    .risk-explain[data-level="yellow"] {
+      border-color: rgba(255, 202, 112, 0.2);
+      background: rgba(55, 34, 7, 0.34);
+    }
+
+    .risk-explain[data-level="red"] {
+      border-color: rgba(255, 123, 123, 0.24);
+      background: rgba(56, 14, 20, 0.34);
+    }
+
+    .risk-explain h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-family: var(--serif);
+    }
+
+    .risk-reason-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .risk-reason-row {
+      display: grid;
+      grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.42fr);
+      gap: 12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .risk-reason-row:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .risk-reason-row strong {
+      color: var(--ink);
+    }
+
+    .risk-reason-row span {
+      color: var(--muted);
     }
 
     .results-topline {
@@ -942,6 +1017,11 @@ input, select, textarea, button {
 
       .risk-pill {
         justify-self: start;
+      }
+
+      .risk-reason-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
       }
 
       .kv-row {
@@ -1197,27 +1277,42 @@ input, select, textarea, button {
         </div>
       </div>
       <form id="simulate-form" class="simulation-controls">
-        <label>Fixture
+        <label>
+          <span class="field-title">Fixture</span>
+          <span class="field-help">Arquivo que define os corpos celestes, massas, posicoes e velocidades iniciais do cenario.</span>
           <select name="fixture_name" data-select="fixtures"></select>
         </label>
-        <label>Passos
+        <label>
+          <span class="field-title">Passos</span>
+          <span class="field-help">Quantidade de avancos numericos. Mais passos mostram uma janela maior da orbita e tambem acumulam mais erro.</span>
           <input type="number" name="steps" value="180" min="1">
         </label>
-        <label>dt (dias)
+        <label>
+          <span class="field-title">dt (dias)</span>
+          <span class="field-help">Tamanho de cada salto no tempo. Valores menores tendem a ser mais precisos; valores maiores podem acelerar e instabilizar.</span>
           <input type="number" name="dt_days" value="1.0" min="0.01" step="0.01">
         </label>
-        <label>Checkpoint
+        <label>
+          <span class="field-title">Checkpoint</span>
+          <span class="field-help">Modelo de IA treinado para sugerir uma correcao residual na aceleracao dos corpos.</span>
           <select name="checkpoint_path" data-select="checkpoints" data-allow-empty="true"></select>
         </label>
-        <label>Scaler
+        <label>
+          <span class="field-title">Scaler</span>
+          <span class="field-help">Arquivo que normaliza massas, posicoes e velocidades para a escala usada durante o treino da IA.</span>
           <select name="scaler_path" data-select="scalers" data-allow-empty="true"></select>
         </label>
-        <label>OOD guard
+        <label>
+          <span class="field-title">OOD guard</span>
+          <span class="field-help">Guarda de seguranca que identifica estados fora do dominio de treino e aciona fallback fisico quando necessario.</span>
           <select name="ood_guard_path" data-select="ood_guards" data-allow-empty="true"></select>
         </label>
         <div class="payload-editor wide">
           <div class="payload-editor-head">
-            <h3>Payload JSON editavel</h3>
+            <div>
+              <h3>Payload JSON editavel</h3>
+              <p class="payload-help">Mostra os mesmos parametros em formato tecnico para reproducao, depuracao ou chamadas diretas ao endpoint.</p>
+            </div>
             <button id="sync-payload-button" type="button" class="secondary">Atualizar JSON</button>
           </div>
           <textarea id="simulation-payload-editor" spellcheck="false"></textarea>
@@ -1391,6 +1486,15 @@ input, select, textarea, button {
           </div>
           <span id="risk-pill" class="risk-pill">neutro</span>
         </div>
+        <div id="risk-explain" class="risk-explain" data-level="neutral">
+          <h3>Por que este semaforo?</h3>
+          <div id="risk-reason-body" class="risk-reason-list">
+            <div class="risk-reason-row">
+              <strong>Aguardando dados</strong>
+              <span>Quando uma simulacao rodar, esta area traduz erro, drift fisico e fallbacks para uma explicacao de fisica orbital.</span>
+            </div>
+          </div>
+        </div>
         <div class="results-grid">
           <div class="results-stack">
             <div id="metric-grid" class="metric-grid"></div>
@@ -1448,13 +1552,166 @@ input, select, textarea, button {
       return `<div class="metric-card"><span>${label}</span><strong>${formatValue(value)}</strong></div>`;
     }
 
-    function makeRisk(level, title, description, pill) {
+    function makeReason(title, detail) {
+      return { title, detail };
+    }
+
+    function makeRisk(level, title, description, pill, reasons) {
       return {
         level,
         title,
         description,
         pill: pill || level,
+        reasons: reasons || [],
       };
+    }
+
+    function isFiniteNumber(value) {
+      return typeof value === "number" && Number.isFinite(value);
+    }
+
+    function metricText(value, unit) {
+      if (!isFiniteNumber(value)) {
+        return "nao informado no payload";
+      }
+      return `${formatValue(value)}${unit ? ` ${unit}` : ""}`;
+    }
+
+    function fallbackReasonSummary(events) {
+      if (!events || events.length === 0) {
+        return "";
+      }
+      const labels = {
+        energy_drift: "drift de energia",
+        angular_momentum_drift: "drift de momento angular",
+        speed_limit: "velocidade fora do limite",
+        distance_limit: "distancia fora do limite",
+        ood_score: "estado fora do dominio de treino",
+      };
+      const counts = {};
+      events.forEach((event) => {
+        const reason = event.reason || "fallback";
+        counts[reason] = (counts[reason] || 0) + 1;
+      });
+      return Object.entries(counts)
+        .map(([reason, count]) => `${count}x ${labels[reason] || reason}`)
+        .join(", ");
+    }
+
+    function addMetricReason(reasons, condition, title, value, unit, detail) {
+      if (!condition) {
+        return;
+      }
+      reasons.push(makeReason(title, `${metricText(value, unit)}. ${detail}`));
+    }
+
+    function validationRiskReasons(payload, level, values) {
+      if (level === "green") {
+        return [
+          makeReason("Referencia fisica proxima", "Os erros contra o motor de referencia ficaram abaixo dos limites didaticos, entao a trajetoria hibrida acompanha a solucao fisica esperada."),
+          makeReason("Conservacao controlada", "Energia e momento angular variaram muito pouco, como se espera em uma simulacao gravitacional numericamente estavel."),
+          makeReason("Sem fallback", "O sistema nao precisou abandonar o modo hibrido para recorrer ao motor fisico de seguranca."),
+        ];
+      }
+
+      const limits = level === "red"
+        ? { finalError: 1e-2, earthError: 1e-2, fallbackCount: 4, energyDrift: 1e-4, angularDrift: 1e-6 }
+        : { finalError: 1e-3, earthError: 1e-3, fallbackCount: 0, energyDrift: 1e-6, angularDrift: 1e-8 };
+      const reasons = [];
+      const events = payload.fallback_events || [];
+      const fallbackDetail = fallbackReasonSummary(events);
+
+      addMetricReason(
+        reasons,
+        !isFiniteNumber(values.finalError) || values.finalError > limits.finalError,
+        "Erro final de posicao",
+        values.finalError,
+        "AU",
+        "A trajetoria hibrida terminou longe da referencia fisica; 1 AU e aproximadamente a distancia media entre Terra e Sol."
+      );
+      addMetricReason(
+        reasons,
+        !isFiniteNumber(values.earthError) || values.earthError > limits.earthError,
+        "Distancia Terra-Apophis",
+        values.earthError,
+        "AU",
+        "A diferenca na distancia de encontro altera a leitura de risco do cenario e indica erro acumulado no movimento relativo."
+      );
+      addMetricReason(
+        reasons,
+        values.fallbackCount > limits.fallbackCount,
+        "Fallbacks acionados",
+        values.fallbackCount,
+        "",
+        `Fallback significa trocar para o motor fisico de referencia porque a etapa hibrida deixou de parecer confiavel.${fallbackDetail ? ` Motivos registrados: ${fallbackDetail}.` : ""}`
+      );
+      addMetricReason(
+        reasons,
+        !isFiniteNumber(values.energyDrift) || values.energyDrift > limits.energyDrift,
+        "Drift de energia",
+        values.energyDrift,
+        "",
+        "Em um sistema gravitacional isolado, a energia total deve variar pouco; drift alto sugere que o calculo esta criando ou perdendo energia numericamente."
+      );
+      addMetricReason(
+        reasons,
+        !isFiniteNumber(values.angularDrift) || values.angularDrift > limits.angularDrift,
+        "Drift de momento angular",
+        values.angularDrift,
+        "",
+        "O momento angular mede a conservacao do giro orbital; drift alto indica que a orbita esta mudando por erro numerico, nao apenas pela gravidade modelada."
+      );
+
+      if (!reasons.length) {
+        reasons.push(makeReason("Classificacao agregada", "Nenhuma metrica isolada dominou a classificacao, mas o conjunto ficou fora da faixa verde."));
+      }
+      return reasons;
+    }
+
+    function trajectoryRiskReasons(payload, level, values) {
+      if (level === "green") {
+        return [
+          makeReason("Orbita numericamente estavel", "A energia e o momento angular ficaram dentro da faixa esperada para uma simulacao curta de corpos celestes."),
+          makeReason("Sem fallback", "Nenhum passo precisou ser recalculado pelo motor fisico de seguranca."),
+        ];
+      }
+
+      const limits = level === "red"
+        ? { fallbackCount: 3, energyDrift: 1e-4, angularDrift: 1e-6 }
+        : { fallbackCount: 0, energyDrift: 1e-6, angularDrift: 1e-8 };
+      const reasons = [];
+      const events = payload.fallback_events || [];
+      const fallbackDetail = fallbackReasonSummary(events);
+
+      addMetricReason(
+        reasons,
+        values.fallbackCount > limits.fallbackCount,
+        "Fallbacks acionados",
+        values.fallbackCount,
+        "",
+        `A simulacao precisou recorrer ao motor de referencia em passos de risco.${fallbackDetail ? ` Motivos registrados: ${fallbackDetail}.` : ""}`
+      );
+      addMetricReason(
+        reasons,
+        !isFiniteNumber(values.energyDrift) || values.energyDrift > limits.energyDrift,
+        "Drift de energia",
+        values.energyDrift,
+        "",
+        "A energia deveria ficar quase conservada; drift alto e sinal de integracao instavel ou passo temporal agressivo."
+      );
+      addMetricReason(
+        reasons,
+        !isFiniteNumber(values.angularDrift) || values.angularDrift > limits.angularDrift,
+        "Drift de momento angular",
+        values.angularDrift,
+        "",
+        "O giro global da orbita deveria mudar pouco; drift alto aponta deformacao numerica da trajetoria."
+      );
+
+      if (!reasons.length) {
+        reasons.push(makeReason("Classificacao agregada", "A trajetoria ficou fora da faixa verde pelo conjunto das metricas de estabilidade."));
+      }
+      return reasons;
     }
 
     function classifyValidationRisk(payload) {
@@ -1463,6 +1720,7 @@ input, select, textarea, button {
       const energyDrift = Math.abs(payload.hybrid_metrics?.energy_drift ?? Number.POSITIVE_INFINITY);
       const angularDrift = Math.abs(payload.hybrid_metrics?.angular_momentum_drift ?? Number.POSITIVE_INFINITY);
       const fallbackCount = payload.fallback_count ?? 0;
+      const values = { finalError, earthError, energyDrift, angularDrift, fallbackCount };
 
       if (
         finalError <= 1e-3 &&
@@ -1475,7 +1733,8 @@ input, select, textarea, button {
           "green",
           "Risco baixo",
           "O caso Apophis ficou proximo da referencia fisica, sem fallback e com drift fisico controlado.",
-          "verde"
+          "verde",
+          validationRiskReasons(payload, "green", values)
         );
       }
 
@@ -1490,7 +1749,8 @@ input, select, textarea, button {
           "yellow",
           "Risco moderado",
           "O caso Apophis permaneceu utilizavel, mas ja mostra erro acumulado, drift ou fallback em nivel de atencao.",
-          "amarelo"
+          "amarelo",
+          validationRiskReasons(payload, "yellow", values)
         );
       }
 
@@ -1498,7 +1758,8 @@ input, select, textarea, button {
         "red",
         "Risco alto",
         "A validacao Apophis mostrou erro, drift ou fallback em nivel que pede revisao antes de vender o resultado como robusto.",
-        "vermelho"
+        "vermelho",
+        validationRiskReasons(payload, "red", values)
       );
     }
 
@@ -1506,13 +1767,15 @@ input, select, textarea, button {
       const energyDrift = Math.abs(payload.metrics?.energy_drift ?? Number.POSITIVE_INFINITY);
       const angularDrift = Math.abs(payload.metrics?.angular_momentum_drift ?? Number.POSITIVE_INFINITY);
       const fallbackCount = (payload.fallback_events || []).length;
+      const values = { energyDrift, angularDrift, fallbackCount };
 
       if (fallbackCount === 0 && energyDrift <= 1e-6 && angularDrift <= 1e-8) {
         return makeRisk(
           "green",
           "Trajetoria estavel",
           "A visualizacao foi gerada com comportamento numerico estavel e sem fallback.",
-          "verde"
+          "verde",
+          trajectoryRiskReasons(payload, "green", values)
         );
       }
 
@@ -1521,7 +1784,8 @@ input, select, textarea, button {
           "yellow",
           "Trajetoria com atencao",
           "A simulacao ainda e legivel, mas ja houve fallback ou drift acima do ideal.",
-          "amarelo"
+          "amarelo",
+          trajectoryRiskReasons(payload, "yellow", values)
         );
       }
 
@@ -1529,7 +1793,8 @@ input, select, textarea, button {
         "red",
         "Trajetoria instavel",
         "A simulacao mostrou sinais fortes de instabilidade numerica ou necessidade excessiva de fallback.",
-        "vermelho"
+        "vermelho",
+        trajectoryRiskReasons(payload, "red", values)
       );
     }
 
@@ -1559,12 +1824,32 @@ input, select, textarea, button {
       `).join("");
     }
 
+    function riskReasonRowsHtml(reasons) {
+      if (!reasons || reasons.length === 0) {
+        return `
+          <div class="risk-reason-row">
+            <strong>Sem motivo detalhado</strong>
+            <span>Use as metricas e o JSON tecnico para inspecao manual desta resposta.</span>
+          </div>
+        `;
+      }
+      return reasons.map((reason) => `
+        <div class="risk-reason-row">
+          <strong>${reason.title}</strong>
+          <span>${reason.detail}</span>
+        </div>
+      `).join("");
+    }
+
     function renderRiskBanner(risk) {
       const banner = document.getElementById("risk-banner");
       banner.setAttribute("data-level", risk.level || "neutral");
       document.getElementById("risk-title").textContent = risk.title || "Sem classificacao";
       document.getElementById("risk-description").textContent = risk.description || "Sem descricao disponivel.";
       document.getElementById("risk-pill").textContent = risk.pill || "neutro";
+      const explanation = document.getElementById("risk-explain");
+      explanation.setAttribute("data-level", risk.level || "neutral");
+      document.getElementById("risk-reason-body").innerHTML = riskReasonRowsHtml(risk.reasons);
     }
 
     function buildReportModel(payload) {

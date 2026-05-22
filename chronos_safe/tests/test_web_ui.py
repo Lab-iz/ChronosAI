@@ -7,6 +7,8 @@ def test_dashboard_html_contains_core_sections() -> None:
     assert "Comece aqui" in html
     assert "O que esta ferramenta faz" in html
     assert "Payload JSON editavel" in html
+    assert "Arquivo que define os corpos celestes" in html
+    assert "Por que este semaforo?" in html
     assert "Exemplo vermelho" in html
     assert "Simular com estes dados" in html
     assert "Teste principal com Apophis" in html
