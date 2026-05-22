@@ -48,8 +48,8 @@ app = FastAPI(
     title="CHRONOS-SAFE",
     version=__version__,
     description=(
-        "Plataforma hibrida de simulacao orbital com motor fisico, correcao residual por IA, "
-        "validacao Apophis e fallback seguro."
+        "Plataforma educacional para aprender a passagem segura de Apophis em 2029 "
+        "e visualizar simulacoes de muitos corpos em 3D."
     ),
     lifespan=lifespan,
 )

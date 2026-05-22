@@ -3,17 +3,18 @@ from chronos_safe.apps.api.web_ui import build_catalog_payload, render_dashboard
 
 def test_dashboard_html_contains_core_sections() -> None:
     html = render_dashboard_html()
-    assert "CHRONOS-SAFE" in html
+    assert "Missao Apophis em 3D" in html
     assert "Comece aqui" in html
-    assert "O que esta ferramenta faz" in html
-    assert "Payload JSON editavel" in html
-    assert "Arquivo que define os corpos celestes" in html
-    assert "Por que este semaforo?" in html
-    assert "Exemplo vermelho" in html
-    assert "Simular com estes dados" in html
-    assert "Teste principal com Apophis" in html
+    assert "Objetivo da plataforma" in html
+    assert "simulacao de muitos corpos" in html
+    assert "O que e Apophis?" in html
+    assert "Opcoes de professor e pesquisa" in html
+    assert "Por que esta cor?" in html
+    assert "Exemplo com alerta" in html
+    assert "Mostrar caminho no espaco" in html
+    assert "Revisar Apophis com detalhes" in html
     assert "trajectory-plot" in html
-    assert "Modo avancado" in html
+    assert "Area de professor" in html
     assert "/static/chronosfav.png" in html
 
 
