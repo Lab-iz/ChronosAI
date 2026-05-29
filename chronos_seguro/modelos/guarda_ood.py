@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from chronos_safe.utils.serialization import read_json, write_json
+from chronos_seguro.utilitarios.serializacao import read_json, write_json
 
 
 def _flatten_features(masses: np.ndarray, positions: np.ndarray, velocities: np.ndarray, mask: np.ndarray) -> np.ndarray:

@@ -1,4 +1,4 @@
-"""FastAPI app."""
+"""Aplicacao FastAPI."""
 
 from __future__ import annotations
 
@@ -9,15 +9,15 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from chronos_safe.apps.api.routes_data import router as data_router
-from chronos_safe.apps.api.routes_simulation import router as simulation_router
-from chronos_safe.apps.api.routes_training import router as training_router
-from chronos_safe.apps.api.schemas import HealthResponse
-from chronos_safe.apps.api.web_ui import build_catalog_payload, render_dashboard_html
-from chronos_safe.config.settings import SETTINGS
-from chronos_safe.runtime import ensure_runtime_directories
-from chronos_safe.utils.logging_utils import configure_logging
-from chronos_safe.version import __version__
+from chronos_seguro.aplicativos.api.rotas_dados import router as roteador_dados
+from chronos_seguro.aplicativos.api.rotas_simulacao import router as roteador_simulacao
+from chronos_seguro.aplicativos.api.rotas_treinamento import router as roteador_treinamento
+from chronos_seguro.aplicativos.api.esquemas import RespostaSaude
+from chronos_seguro.aplicativos.api.interface_web import montar_payload_catalogo, renderizar_html_painel
+from chronos_seguro.configuracao.ajustes import SETTINGS
+from chronos_seguro.execucao import ensure_runtime_directories
+from chronos_seguro.utilitarios.logs import configure_logging
+from chronos_seguro.versao import __version__
 
 STATIC_DIR = Path(__file__).with_name("static")
 
@@ -29,9 +29,9 @@ async def lifespan(_: FastAPI):
     yield
 
 
-def create_app() -> FastAPI:
+def criar_app() -> FastAPI:
     app = FastAPI(
-        title="CHRONOS-SAFE",
+        title="CHRONOS-SEGURO",
         version=__version__,
         description=(
             "Plataforma educacional para aprender a passagem segura de Apophis em 2029 "
@@ -39,26 +39,30 @@ def create_app() -> FastAPI:
         ),
         lifespan=lifespan,
     )
-    app.include_router(data_router)
-    app.include_router(training_router)
-    app.include_router(simulation_router)
+    app.include_router(roteador_dados)
+    app.include_router(roteador_treinamento)
+    app.include_router(roteador_simulacao)
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
     return app
 
 
-app = create_app()
+app = criar_app()
 
 
 @app.get("/", response_class=HTMLResponse)
 def dashboard() -> HTMLResponse:
-    return HTMLResponse(render_dashboard_html())
+    return HTMLResponse(renderizar_html_painel())
 
 
-@app.get("/health", response_model=HealthResponse)
-def health() -> HealthResponse:
-    return HealthResponse(status="ok", version=__version__)
+@app.get("/health", response_model=RespostaSaude)
+def saude() -> RespostaSaude:
+    return RespostaSaude(status="ok", version=__version__)
 
 
 @app.get("/ui/catalog")
-def ui_catalog() -> dict[str, object]:
-    return build_catalog_payload()
+def catalogo_ui() -> dict[str, object]:
+    return montar_payload_catalogo()
+
+
+create_app = criar_app
+HealthResponse = RespostaSaude

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from chronos_safe.config.constants import (
+from chronos_seguro.configuracao.constantes import (
     AU_IN_METERS,
     DAY_IN_SECONDS,
     SOLAR_MASS_IN_KG,

@@ -1,4 +1,4 @@
-"""Runtime setup shared by launchers and deployed API processes."""
+"""Preparacao de execucao compartilhada por inicializadores e processos de API publicados."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping
 
-from chronos_safe.config.settings import SETTINGS, Settings
-from chronos_safe.utils.logging_utils import configure_logging
+from chronos_seguro.configuracao.ajustes import SETTINGS, Settings
+from chronos_seguro.utilitarios.logs import configure_logging
 
 TRUE_VALUES = {"1", "true", "yes", "on"}
 
@@ -29,17 +29,17 @@ class WebServerConfig:
 def runtime_directories(settings: Settings = SETTINGS) -> tuple[Path, ...]:
     return (
         settings.data_root,
-        settings.data_root / "raw",
-        settings.data_root / "processed",
+        settings.data_root / "brutos",
+        settings.data_root / "processados",
         settings.data_root / "cache",
-        settings.data_root / "fixtures",
+        settings.data_root / "cenarios",
         settings.models_root,
-        settings.models_root / "checkpoints",
-        settings.models_root / "scalers",
+        settings.models_root / "pontos_controle",
+        settings.models_root / "escalonadores",
         settings.reports_root,
-        settings.reports_root / "figures",
-        settings.reports_root / "benchmarks",
-        settings.reports_root / "validation",
+        settings.reports_root / "figuras",
+        settings.reports_root / "comparativos",
+        settings.reports_root / "validacao",
     )
 
 
@@ -58,12 +58,12 @@ def web_server_config_from_env(env: Mapping[str, str] | None = None) -> WebServe
     return WebServerConfig(host=host, port=port, open_browser=open_browser)
 
 
-def run_web_server(app_path: str = "chronos_safe.apps.api.main:app") -> None:
+def run_web_server(app_path: str = "chronos_seguro.aplicativos.api.principal:app") -> None:
     try:
         import uvicorn
     except ImportError as exc:  # pragma: no cover - runtime dependency error
         raise RuntimeError(
-            "uvicorn is required to run the web UI. Install with: python -m pip install -e ."
+            "uvicorn e necessario para rodar a interface web. Instale com: python -m pip install -e ."
         ) from exc
 
     configure_logging(SETTINGS.log_level)
@@ -73,5 +73,5 @@ def run_web_server(app_path: str = "chronos_safe.apps.api.main:app") -> None:
     if config.open_browser:
         threading.Timer(1.2, lambda: webbrowser.open(config.url)).start()
 
-    print(f"CHRONOS-SAFE web UI: {config.url}")
+    print(f"Interface web CHRONOS-SEGURO: {config.url}")
     uvicorn.run(app_path, host=config.host, port=config.port, reload=False)

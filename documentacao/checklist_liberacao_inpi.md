@@ -1,12 +1,12 @@
-# INPI Release Checklist
+# Lista de Liberacao para INPI
 
-- Software name frozen as `CHRONOS-SAFE`
-- Version frozen as `1.0.0`
-- Authors listed in `AUTHORS.md`
-- License present
-- `CHANGELOG.md` updated
-- `THIRD_PARTY_NOTICES.md` updated
-- Technical docs present in `docs/`
-- CLI entrypoint documented
-- Offline validation report reproducible
-- Internal version hash and final VCS tag to be attached at release time
+- Nome do software congelado como `CHRONOS-SEGURO`.
+- Versao congelada como `1.0.0`.
+- Autores listados em `AUTORES.md`.
+- Licenca presente em `LICENSE`.
+- `HISTORICO.md` atualizado.
+- `AVISOS_TERCEIROS.md` atualizado.
+- Documentacao tecnica presente em `documentacao/`.
+- Entrada da CLI documentada.
+- Relatorio de validacao offline reproduzivel.
+- Hash interno de versao e tag final do VCS anexados no momento da liberacao.

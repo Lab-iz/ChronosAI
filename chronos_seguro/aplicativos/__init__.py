@@ -1,1 +1,1 @@
-"""Application entrypoints."""
+"""Entradas de aplicacao."""

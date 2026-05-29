@@ -6,8 +6,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from chronos_safe.config.constants import DEFAULT_SOFTENING_AU, GRAVITATIONAL_CONSTANT_AU_DAY
-from chronos_safe.domain.state import SystemState
+from chronos_seguro.configuracao.constantes import DEFAULT_SOFTENING_AU, GRAVITATIONAL_CONSTANT_AU_DAY
+from chronos_seguro.dominio.estado import SystemState
 
 
 def pairwise_accelerations(

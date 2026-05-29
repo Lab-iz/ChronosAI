@@ -1,6 +1,6 @@
 {
-  "dataset_dir": "data/processed/specialist",
-  "output_dir": "models/checkpoints/specialist",
+  "dataset_dir": "dados/processados/especialista",
+  "output_dir": "modelos/pontos_controle/especialista",
   "epochs_requested": 6,
   "best_epoch": 2,
   "best_val_loss": 6.572017083921924e+27,

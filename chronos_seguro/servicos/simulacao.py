@@ -1,26 +1,26 @@
-"""Shared simulation orchestration services."""
+"""Servicos compartilhados de orquestracao de simulacao."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
 
-from chronos_safe.config.settings import SETTINGS
-from chronos_safe.data.horizons_client import HorizonsClient
-from chronos_safe.data.scalers import PhysicalScaler
-from chronos_safe.domain.results import SimulationResult
-from chronos_safe.domain.state import SystemState
-from chronos_safe.models.ood_guard import OODGuard
-from chronos_safe.physics.quick_integrator import QuickIntegrator
-from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
-from chronos_safe.simulation.hybrid_engine import HybridEngine, load_torch_model
-from chronos_safe.simulation.rollout import RolloutConfig, run_hybrid_rollout
-from chronos_safe.utils.device import get_device
+from chronos_seguro.configuracao.ajustes import SETTINGS
+from chronos_seguro.dados.cliente_horizons import HorizonsClient
+from chronos_seguro.dados.escalonadores import PhysicalScaler
+from chronos_seguro.dominio.resultados import SimulationResult
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.modelos.guarda_ood import OODGuard
+from chronos_seguro.fisica.integrador_rapido import QuickIntegrator
+from chronos_seguro.fisica.motor_rebound import ReboundReferenceEngine
+from chronos_seguro.simulacao.motor_hibrido import HybridEngine, load_torch_model
+from chronos_seguro.simulacao.propagacao import RolloutConfig, run_hybrid_rollout
+from chronos_seguro.utilitarios.dispositivo import get_device
 
 
 @dataclass(frozen=True, slots=True)
-class SimulationConfig:
-    fixture_name: str = "apophis/apophis_fixture.json"
+class ConfiguracaoSimulacao:
+    fixture_name: str = "apophis/cenario_apophis.json"
     steps: int = 30
     dt_days: float = 1.0
     checkpoint_path: str | Path | None = None
@@ -28,12 +28,12 @@ class SimulationConfig:
     ood_guard_path: str | Path | None = None
 
 
-def load_fixture_state(fixture_name: str, client: HorizonsClient | None = None) -> SystemState:
+def carregar_estado_cenario(fixture_name: str, client: HorizonsClient | None = None) -> SystemState:
     horizons_client = client or HorizonsClient()
     return horizons_client.load_fixture(fixture_name)
 
 
-def build_hybrid_engine(
+def construir_motor_hibrido(
     *,
     dt_days: float,
     checkpoint_path: str | Path | None = None,
@@ -58,9 +58,9 @@ def build_hybrid_engine(
     )
 
 
-def run_fixture_rollout(config: SimulationConfig) -> SimulationResult:
-    initial_state = load_fixture_state(config.fixture_name)
-    engine = build_hybrid_engine(
+def executar_propagacao_cenario(config: ConfiguracaoSimulacao) -> SimulationResult:
+    initial_state = carregar_estado_cenario(config.fixture_name)
+    engine = construir_motor_hibrido(
         dt_days=config.dt_days,
         checkpoint_path=config.checkpoint_path,
         scaler_path=config.scaler_path,
@@ -69,7 +69,7 @@ def run_fixture_rollout(config: SimulationConfig) -> SimulationResult:
     return run_hybrid_rollout(initial_state, engine, RolloutConfig(steps=config.steps, dt_days=config.dt_days))
 
 
-def trajectory_payload(result: SimulationResult, *, dt_days: float, source: str) -> dict[str, object]:
+def montar_payload_trajetoria(result: SimulationResult, *, dt_days: float, source: str) -> dict[str, object]:
     return {
         "source": source,
         "ids": list(result.states[0].ids),
@@ -78,3 +78,10 @@ def trajectory_payload(result: SimulationResult, *, dt_days: float, source: str)
         "metrics": dict(result.metrics),
         "fallback_events": [event.to_dict() for event in result.fallback_events],
     }
+
+
+SimulationConfig = ConfiguracaoSimulacao
+load_fixture_state = carregar_estado_cenario
+build_hybrid_engine = construir_motor_hibrido
+run_fixture_rollout = executar_propagacao_cenario
+trajectory_payload = montar_payload_trajetoria

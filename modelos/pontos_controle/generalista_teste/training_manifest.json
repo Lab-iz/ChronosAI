@@ -1,6 +1,6 @@
 {
-  "dataset_dir": "data\\processed\\generalist_smoke",
-  "output_dir": "models\\checkpoints\\generalist_smoke",
+  "dataset_dir": "dados\\processados\\generalista_teste",
+  "output_dir": "modelos\\pontos_controle\\generalista_teste",
   "epochs_requested": 1,
   "best_epoch": 1,
   "best_val_loss": 5695973888.0,

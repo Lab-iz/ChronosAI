@@ -1,11 +1,11 @@
 import numpy as np
 
-from chronos_safe.domain.state import BodyState, SystemState
-from chronos_safe.physics.frames import standardize_state
-from chronos_safe.simulation.safe_switch import evaluate_state_safety
+from chronos_seguro.dominio.estado import BodyState, SystemState
+from chronos_seguro.fisica.referenciais import standardize_state
+from chronos_seguro.simulacao.chave_segura import evaluate_state_safety
 
 
-def test_safe_switch_fallbacks_on_large_residual() -> None:
+def test_chave_segura_aciona_fallback_com_residual_grande() -> None:
     state = standardize_state(
         SystemState.from_bodies(
             [

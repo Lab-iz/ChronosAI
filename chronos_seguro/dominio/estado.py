@@ -7,7 +7,7 @@ from typing import Iterable
 
 import numpy as np
 
-from chronos_safe.domain.types import ArrayF64, JsonDict
+from chronos_seguro.dominio.tipos import ArrayF64, JsonDict
 
 
 def _as_float_array(value: Iterable[float] | np.ndarray, shape: tuple[int, ...] | None = None) -> ArrayF64:

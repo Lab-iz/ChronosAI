@@ -3,10 +3,10 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from chronos_safe.models.residual_gnn import ResidualGNN, ResidualGNNConfig
+from chronos_seguro.modelos.gnn_residual import ResidualGNN, ResidualGNNConfig
 
 
-def test_model_forward_produces_finite_output() -> None:
+def test_forward_modelo_produz_saida_finita() -> None:
     model = ResidualGNN(ResidualGNNConfig(hidden_dim=16, num_message_passing_steps=1))
     masses = torch.ones((2, 4), dtype=torch.float32)
     positions = torch.as_tensor(np.random.randn(2, 4, 3), dtype=torch.float32)

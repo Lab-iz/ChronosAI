@@ -9,8 +9,8 @@ import numpy as np
 
 
 def set_seed(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
+    random.semente(seed)
+    np.random.semente(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
     try:
         import torch

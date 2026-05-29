@@ -1,4 +1,4 @@
-"""Safety guard and fallback decisions."""
+"""Guarda de seguranca e decisoes de fallback."""
 
 from __future__ import annotations
 
@@ -6,10 +6,10 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from chronos_safe.config.settings import SETTINGS
-from chronos_safe.domain.results import FallbackEvent
-from chronos_safe.domain.state import SystemState
-from chronos_safe.physics.invariants import angular_momentum, total_energy
+from chronos_seguro.configuracao.ajustes import SETTINGS
+from chronos_seguro.dominio.resultados import FallbackEvent
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.fisica.invariantes import angular_momentum, total_energy
 
 
 @dataclass(slots=True)

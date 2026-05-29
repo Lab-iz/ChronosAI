@@ -1,4 +1,4 @@
-"""Dataset generation routes."""
+"""Rotas de geracao de dados."""
 
 from __future__ import annotations
 
@@ -6,17 +6,17 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 
-from chronos_safe.apps.api.schemas import GenerateGeneralistRequest, GenerateSpecialistRequest
-from chronos_safe.data.specialist_generator import SpecialistGenerationConfig, generate_specialist_dataset
-from chronos_safe.data.synthetic_generator import SyntheticGenerationConfig, generate_generalist_dataset
+from chronos_seguro.aplicativos.api.esquemas import RequisicaoGerarEspecialista, RequisicaoGerarGeneralista
+from chronos_seguro.dados.gerador_especialista import ConfiguracaoGeracaoEspecialista, gerar_dataset_especialista
+from chronos_seguro.dados.gerador_sintetico import ConfiguracaoGeracaoSintetica, gerar_dataset_generalista
 
-router = APIRouter(prefix="/generate", tags=["data"])
+router = APIRouter(prefix="/gerar", tags=["dados"])
 
 
-@router.post("/generalist")
-def generate_generalist(request: GenerateGeneralistRequest) -> dict[str, object]:
-    output_dir = generate_generalist_dataset(
-        SyntheticGenerationConfig(
+@router.post("/generalista")
+def gerar_generalista(request: RequisicaoGerarGeneralista) -> dict[str, object]:
+    output_dir = gerar_dataset_generalista(
+        ConfiguracaoGeracaoSintetica(
             output_dir=Path(request.output_dir),
             num_samples=request.num_samples,
             min_bodies=request.min_bodies,
@@ -24,14 +24,14 @@ def generate_generalist(request: GenerateGeneralistRequest) -> dict[str, object]
             dt_days=request.dt_days,
         )
     )
-    return {"status": "ok", "kind": "generalist", "output_dir": str(output_dir.as_posix())}
+    return {"status": "ok", "kind": "generalista", "output_dir": str(output_dir.as_posix())}
 
 
-@router.post("/specialist")
-def generate_specialist(request: GenerateSpecialistRequest) -> dict[str, object]:
+@router.post("/especialista")
+def gerar_especialista(request: RequisicaoGerarEspecialista) -> dict[str, object]:
     try:
-        output_dir = generate_specialist_dataset(
-            SpecialistGenerationConfig(
+        output_dir = gerar_dataset_especialista(
+            ConfiguracaoGeracaoEspecialista(
                 output_dir=Path(request.output_dir),
                 fixture_name=request.fixture_name,
                 num_samples=request.num_samples,
@@ -39,5 +39,5 @@ def generate_specialist(request: GenerateSpecialistRequest) -> dict[str, object]
             )
         )
     except FileNotFoundError as exc:
-        raise HTTPException(status_code=404, detail=f"Fixture not found: {request.fixture_name}") from exc
-    return {"status": "ok", "kind": "specialist", "output_dir": str(output_dir.as_posix())}
+        raise HTTPException(status_code=404, detail=f"Cenario nao encontrado: {request.fixture_name}") from exc
+    return {"status": "ok", "kind": "especialista", "output_dir": str(output_dir.as_posix())}

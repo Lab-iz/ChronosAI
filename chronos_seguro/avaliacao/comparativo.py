@@ -1,16 +1,16 @@
-"""Benchmarking helpers."""
+"""Utilitarios de comparacao de desempenho."""
 
 from __future__ import annotations
 
 import time
 
-from chronos_safe.domain.results import BenchmarkResult, SimulationResult
-from chronos_safe.domain.state import SystemState
-from chronos_safe.evaluation.metrics import compare_rollouts
-from chronos_safe.physics.quick_integrator import QuickIntegrator
-from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
-from chronos_safe.simulation.hybrid_engine import HybridEngine
-from chronos_safe.simulation.rollout import RolloutConfig, run_hybrid_rollout
+from chronos_seguro.dominio.resultados import BenchmarkResult, SimulationResult
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.avaliacao.metricas import compare_rollouts
+from chronos_seguro.fisica.integrador_rapido import QuickIntegrator
+from chronos_seguro.fisica.motor_rebound import ReboundReferenceEngine
+from chronos_seguro.simulacao.motor_hibrido import HybridEngine
+from chronos_seguro.simulacao.propagacao import RolloutConfig, run_hybrid_rollout
 
 
 def _run_reference_rollout(initial_state: SystemState, reference: ReboundReferenceEngine, config: RolloutConfig) -> SimulationResult:
@@ -19,7 +19,7 @@ def _run_reference_rollout(initial_state: SystemState, reference: ReboundReferen
     for _ in range(config.steps):
         current = reference.step(current)
         states.append(current.copy())
-    from chronos_safe.evaluation.metrics import rollout_metrics
+    from chronos_seguro.avaliacao.metricas import rollout_metrics
 
     return SimulationResult(initial_state=initial_state, states=states, fallback_events=[], metrics=rollout_metrics(states))
 

@@ -1,13 +1,13 @@
-"""Specialist fine-tuning entrypoint."""
+"""Entrada de ajuste fino especialista."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from chronos_safe.training.trainer import TrainingConfig, train_model
+from chronos_seguro.treinamento.treinador import ConfiguracaoTreinamento, treinar_modelo
 
 
-def run_train_specialist(
+def executar_treino_especialista(
     dataset_dir: str | Path,
     output_dir: str | Path,
     base_checkpoint: str | Path | None = None,
@@ -15,8 +15,8 @@ def run_train_specialist(
     batch_size: int = 16,
     learning_rate: float = 5.0e-4,
 ) -> dict[str, object]:
-    return train_model(
-        TrainingConfig(
+    return treinar_modelo(
+        ConfiguracaoTreinamento(
             dataset_dir=Path(dataset_dir),
             output_dir=Path(output_dir),
             epochs=epochs,
@@ -25,3 +25,6 @@ def run_train_specialist(
             initial_checkpoint=None if base_checkpoint is None else Path(base_checkpoint),
         )
     )
+
+
+run_train_especialista = executar_treino_especialista

@@ -1,4 +1,4 @@
-"""Training losses."""
+"""Perdas de treinamento."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ except ImportError:  # pragma: no cover - optional dependency
 
 def _require_torch() -> None:
     if torch is None:  # pragma: no cover - exercised only without torch
-        raise RuntimeError("PyTorch is required for training.")
+        raise RuntimeError("PyTorch e necessario para treinamento.")
 
 
 def masked_mse(prediction, target, mask):

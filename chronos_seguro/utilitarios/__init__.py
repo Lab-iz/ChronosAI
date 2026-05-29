@@ -1,1 +1,1 @@
-"""Utility helpers."""
+"""Utilitarios compartilhados."""

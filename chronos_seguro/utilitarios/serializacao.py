@@ -1,4 +1,4 @@
-"""Serialization helpers."""
+"""Utilitarios de serializacao."""
 
 from __future__ import annotations
 

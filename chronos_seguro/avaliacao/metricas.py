@@ -1,11 +1,11 @@
-"""Simulation metrics."""
+"""Metricas de simulacao."""
 
 from __future__ import annotations
 
 import numpy as np
 
-from chronos_safe.domain.state import SystemState
-from chronos_safe.physics.invariants import angular_momentum, total_energy
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.fisica.invariantes import angular_momentum, total_energy
 
 
 def _align_states(reference: list[SystemState], candidate: list[SystemState]) -> tuple[list[SystemState], list[SystemState]]:

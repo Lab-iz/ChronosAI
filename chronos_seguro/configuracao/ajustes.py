@@ -6,7 +6,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from chronos_safe.config.constants import (
+from chronos_seguro.configuracao.constantes import (
     DEFAULT_MAX_ANGULAR_MOMENTUM_DRIFT,
     DEFAULT_MAX_ENERGY_DRIFT,
     DEFAULT_MAX_RESIDUAL_ACCEL_AU_DAY2,
@@ -51,9 +51,9 @@ class Settings:
     @classmethod
     def from_env(cls) -> "Settings":
         project_root = Path(__file__).resolve().parents[2]
-        data_root = _env_path("CHRONOS_DATA_ROOT", project_root / "data", project_root)
-        models_root = _env_path("CHRONOS_MODELS_ROOT", project_root / "models", project_root)
-        reports_root = _env_path("CHRONOS_REPORTS_ROOT", project_root / "reports", project_root)
+        data_root = _env_path("CHRONOS_DATA_ROOT", project_root / "dados", project_root)
+        models_root = _env_path("CHRONOS_MODELS_ROOT", project_root / "modelos", project_root)
+        reports_root = _env_path("CHRONOS_REPORTS_ROOT", project_root / "relatorios", project_root)
         return cls(
             project_root=project_root,
             data_root=data_root,

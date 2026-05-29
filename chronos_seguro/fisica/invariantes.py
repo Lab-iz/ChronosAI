@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from chronos_safe.config.constants import GRAVITATIONAL_CONSTANT_AU_DAY, DEFAULT_SOFTENING_AU
-from chronos_safe.domain.state import SystemState
+from chronos_seguro.configuracao.constantes import GRAVITATIONAL_CONSTANT_AU_DAY, DEFAULT_SOFTENING_AU
+from chronos_seguro.dominio.estado import SystemState
 
 
 def kinetic_energy(state: SystemState) -> float:

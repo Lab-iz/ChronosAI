@@ -1,29 +1,31 @@
-# Methodology
+# Metodologia
 
-## Training target
+## Alvo de treinamento
 
-The model learns an effective residual acceleration:
+O modelo aprende uma aceleracao residual efetiva:
 
-`delta_acceleration = (v_teacher_next - v_quick_next) / dt`
+```text
+delta_acceleration = (v_professor_proximo - v_rapido_proximo) / dt
+```
 
-This keeps the neural target tied to the truncation error of the quick integrator rather than the full physical state.
+Esse alvo mantem a rede ligada ao erro de truncamento do integrador rapido, em vez de pedir que a IA aprenda todo o estado fisico do zero.
 
-## Data generation
+## Geracao de dados
 
-- Generalist data: synthetic orbital systems with a solar-mass primary and randomized secondary bodies.
-- Specialist data: perturbations around a frozen Solar System or Apophis fixture.
-- All states are standardized to barycentric coordinates and canonical body ordering.
+- Dados generalistas: sistemas orbitais sinteticos com primario de massa solar e corpos secundarios aleatorizados.
+- Dados especialistas: perturbacoes em torno de um fixture congelado do Sistema Solar ou do cenario Apophis.
+- Todos os estados sao padronizados em coordenadas baricentricas e ordenacao canonica de corpos.
 
-## Safety-first evaluation
+## Avaliacao com seguranca em primeiro lugar
 
-Loss alone is not treated as success. Every model must also be evaluated with:
+Loss isolada nao e tratada como sucesso. Cada modelo tambem precisa ser avaliado com:
 
-- rollout error across multiple steps;
-- energy drift;
-- angular momentum drift;
-- fallback frequency;
-- runtime against the reference engine.
+- erro de propagacao em multiplos passos;
+- drift de energia;
+- drift de momento angular;
+- frequencia de fallback;
+- tempo de execucao contra o motor de referencia.
 
-## OOD strategy
+## Estrategia OOD
 
-The v1.0 guard uses a diagonal Mahalanobis-like score over flattened state features with a threshold fitted from the training set. The design intentionally leaves room for MC dropout and ensemble disagreement in later versions.
+A guarda OOD da v1.0 usa uma pontuacao parecida com Mahalanobis diagonal sobre caracteristicas achatadas do estado, com limiar ajustado no conjunto de treino. O desenho deixa espaco para dropout Monte Carlo e desacordo de ensemble em versoes futuras.

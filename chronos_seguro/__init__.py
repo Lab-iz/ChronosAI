@@ -1,5 +1,5 @@
-"""CHRONOS-SAFE package."""
+"""CHRONOS-SEGURO package."""
 
-from chronos_safe.version import __version__
+from chronos_seguro.versao import __version__
 
 __all__ = ["__version__"]

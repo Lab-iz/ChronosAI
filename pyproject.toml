@@ -3,16 +3,16 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "chronos-safe"
+name = "chronos-seguro"
 version = "1.0.0"
-description = "Hybrid orbital simulation platform with residual learning, safety guards and physics fallback."
+description = "Plataforma de simulacao orbital hibrida com aprendizado residual, guardas de seguranca e recuo fisico."
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 license = { text = "MIT" }
 authors = [
   { name = "Gabriel Azevedo Marques" }
 ]
-keywords = ["astrodynamics", "n-body", "simulation", "gnn", "physics", "hybrid-ai"]
+keywords = ["astrodinamica", "n-corpos", "simulacao", "gnn", "fisica", "ia-hibrida"]
 dependencies = [
   "numpy>=1.26",
   "pydantic>=2.7",
@@ -40,16 +40,16 @@ dev = [
 ]
 
 [project.scripts]
-chronos = "chronos_safe.apps.cli.main:main"
-chronos-web = "chronos_safe.runtime:run_web_server"
+chronos = "chronos_seguro.aplicativos.linha_comando.principal:main"
+chronos-web = "chronos_seguro.execucao:run_web_server"
 
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["chronos_safe*"]
+include = ["chronos_seguro*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["testes"]
 pythonpath = ["."]

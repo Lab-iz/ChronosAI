@@ -1,4 +1,4 @@
-"""Synthetic generalist data generation."""
+"""Geracao sintetica de dados generalistas."""
 
 from __future__ import annotations
 
@@ -7,20 +7,20 @@ from pathlib import Path
 
 import numpy as np
 
-from chronos_safe.config.constants import DEFAULT_MAX_BODIES
-from chronos_safe.config.settings import SETTINGS
-from chronos_safe.data.cache import save_manifest, save_npz_bundle
-from chronos_safe.data.preprocess import build_processed_sample
-from chronos_safe.data.scalers import PhysicalScaler
-from chronos_safe.domain.state import BodyState, SystemState
-from chronos_safe.physics.frames import standardize_state
-from chronos_safe.physics.quick_integrator import QuickIntegrator
-from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
-from chronos_safe.utils.seed import set_seed
+from chronos_seguro.configuracao.constantes import DEFAULT_MAX_BODIES
+from chronos_seguro.configuracao.ajustes import SETTINGS
+from chronos_seguro.dados.cache import save_manifest, save_npz_bundle
+from chronos_seguro.dados.preprocessamento import construir_amostra_processada
+from chronos_seguro.dados.escalonadores import PhysicalScaler
+from chronos_seguro.dominio.estado import BodyState, SystemState
+from chronos_seguro.fisica.referenciais import standardize_state
+from chronos_seguro.fisica.integrador_rapido import QuickIntegrator
+from chronos_seguro.fisica.motor_rebound import ReboundReferenceEngine
+from chronos_seguro.utilitarios.semente import set_seed
 
 
 @dataclass(slots=True)
-class SyntheticGenerationConfig:
+class ConfiguracaoGeracaoSintetica:
     output_dir: Path
     num_samples: int = 128
     min_bodies: int = 2
@@ -30,7 +30,7 @@ class SyntheticGenerationConfig:
     max_padded_bodies: int = DEFAULT_MAX_BODIES
 
 
-def _sample_orbit(
+def _amostrar_orbita(
     rng: np.random.Generator,
     central_mass: float,
     semi_major_axis: float,
@@ -53,7 +53,7 @@ def _sample_orbit(
     return rot_x @ position_plane, rot_x @ velocity_plane
 
 
-def random_orbital_system(rng: np.random.Generator, num_bodies: int) -> SystemState:
+def sistema_orbital_aleatorio(rng: np.random.Generator, num_bodies: int) -> SystemState:
     central_mass = 1.0
     bodies = [BodyState("sun", central_mass, np.zeros(3), np.zeros(3))]
     for index in range(1, num_bodies):
@@ -62,12 +62,12 @@ def random_orbital_system(rng: np.random.Generator, num_bodies: int) -> SystemSt
         inclination = rng.uniform(0.0, 0.15)
         phase = rng.uniform(0.0, 2.0 * np.pi)
         mass = 10 ** rng.uniform(-10, -5)
-        position, velocity = _sample_orbit(rng, central_mass, semi_major_axis, eccentricity, inclination, phase)
+        position, velocity = _amostrar_orbita(rng, central_mass, semi_major_axis, eccentricity, inclination, phase)
         bodies.append(BodyState(f"body_{index:02d}", mass, position, velocity))
     return standardize_state(SystemState.from_bodies(bodies, metadata={"source": "synthetic"}))
 
 
-def generate_generalist_dataset(config: SyntheticGenerationConfig) -> Path:
+def gerar_dataset_generalista(config: ConfiguracaoGeracaoSintetica) -> Path:
     set_seed(config.seed)
     rng = np.random.default_rng(config.seed)
     quick = QuickIntegrator(dt_days=config.dt_days)
@@ -75,11 +75,11 @@ def generate_generalist_dataset(config: SyntheticGenerationConfig) -> Path:
     samples = []
     for _ in range(config.num_samples):
         num_bodies = int(rng.integers(config.min_bodies, config.max_bodies + 1))
-        initial_state = random_orbital_system(rng, num_bodies)
+        initial_state = sistema_orbital_aleatorio(rng, num_bodies)
         teacher_next = reference.step(initial_state)
         quick_next = quick.step(initial_state)
         samples.append(
-            build_processed_sample(
+            construir_amostra_processada(
                 initial_state=initial_state,
                 teacher_next=teacher_next,
                 quick_next=quick_next,
@@ -110,7 +110,7 @@ def generate_generalist_dataset(config: SyntheticGenerationConfig) -> Path:
     save_manifest(
         config.output_dir / "manifest.json",
         {
-            "kind": "generalist",
+            "kind": "generalista",
             "num_samples": config.num_samples,
             "dt_days": config.dt_days,
             "body_ids_template": ids,
@@ -119,3 +119,8 @@ def generate_generalist_dataset(config: SyntheticGenerationConfig) -> Path:
         },
     )
     return config.output_dir
+
+
+SyntheticGenerationConfig = ConfiguracaoGeracaoSintetica
+random_orbital_system = sistema_orbital_aleatorio
+generate_generalista_dataset = gerar_dataset_generalista

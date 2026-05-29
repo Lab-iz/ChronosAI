@@ -1,10 +1,14 @@
-from chronos_safe.services.simulation import SimulationConfig, run_fixture_rollout, trajectory_payload
+from chronos_seguro.servicos.simulacao import (
+    ConfiguracaoSimulacao,
+    executar_propagacao_cenario,
+    montar_payload_trajetoria,
+)
 
 
-def test_simulation_service_builds_trajectory_payload() -> None:
-    config = SimulationConfig(steps=2, dt_days=1.0)
-    result = run_fixture_rollout(config)
-    payload = trajectory_payload(result, dt_days=config.dt_days, source=config.fixture_name)
+def test_servico_simulacao_monta_payload_trajetoria() -> None:
+    config = ConfiguracaoSimulacao(steps=2, dt_days=1.0)
+    result = executar_propagacao_cenario(config)
+    payload = montar_payload_trajetoria(result, dt_days=config.dt_days, source=config.fixture_name)
 
     assert payload["source"] == config.fixture_name
     assert payload["dt_days"] == config.dt_days

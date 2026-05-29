@@ -1,4 +1,4 @@
-"""Simulation routes."""
+"""Rotas de simulacao."""
 
 from __future__ import annotations
 
@@ -6,16 +6,20 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 
-from chronos_safe.apps.api.schemas import SimulateRequest
-from chronos_safe.domain.results import SimulationResult
-from chronos_safe.simulation.mission_apophis import ApophisValidationConfig, run_apophis_validation
-from chronos_safe.services.simulation import SimulationConfig, run_fixture_rollout, trajectory_payload
+from chronos_seguro.aplicativos.api.esquemas import RequisicaoSimulacao
+from chronos_seguro.dominio.resultados import SimulationResult
+from chronos_seguro.simulacao.missao_apophis import ConfiguracaoValidacaoApophis, executar_validacao_apophis
+from chronos_seguro.servicos.simulacao import (
+    ConfiguracaoSimulacao,
+    executar_propagacao_cenario,
+    montar_payload_trajetoria,
+)
 
-router = APIRouter(tags=["simulation"])
+router = APIRouter(tags=["simulacao"])
 
 
-def _simulation_config(request: SimulateRequest) -> SimulationConfig:
-    return SimulationConfig(
+def _configuracao_simulacao(request: RequisicaoSimulacao) -> ConfiguracaoSimulacao:
+    return ConfiguracaoSimulacao(
         fixture_name=request.fixture_name,
         steps=request.steps,
         dt_days=request.dt_days,
@@ -25,32 +29,32 @@ def _simulation_config(request: SimulateRequest) -> SimulationConfig:
     )
 
 
-def _run_rollout_or_raise(config: SimulationConfig) -> SimulationResult:
+def _executar_propagacao_ou_erro(config: ConfiguracaoSimulacao) -> SimulationResult:
     try:
-        return run_fixture_rollout(config)
+        return executar_propagacao_cenario(config)
     except FileNotFoundError as exc:
-        raise HTTPException(status_code=404, detail=f"Fixture not found: {config.fixture_name}") from exc
+        raise HTTPException(status_code=404, detail=f"Cenario nao encontrado: {config.fixture_name}") from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
-@router.post("/simulate")
-def simulate(request: SimulateRequest) -> dict[str, object]:
-    result = _run_rollout_or_raise(_simulation_config(request))
+@router.post("/simular")
+def simular(request: RequisicaoSimulacao) -> dict[str, object]:
+    result = _executar_propagacao_ou_erro(_configuracao_simulacao(request))
     return result.to_dict()
 
 
-@router.post("/simulate/trajectory")
-def simulate_trajectory(request: SimulateRequest) -> dict[str, object]:
-    result = _run_rollout_or_raise(_simulation_config(request))
-    return trajectory_payload(result, dt_days=request.dt_days, source=request.fixture_name)
+@router.post("/simular/trajetoria")
+def simular_trajetoria(request: RequisicaoSimulacao) -> dict[str, object]:
+    result = _executar_propagacao_ou_erro(_configuracao_simulacao(request))
+    return montar_payload_trajetoria(result, dt_days=request.dt_days, source=request.fixture_name)
 
 
-@router.post("/validate/apophis")
-def validate_apophis(request: SimulateRequest) -> dict[str, object]:
+@router.post("/validar/apophis")
+def validar_apophis(request: RequisicaoSimulacao) -> dict[str, object]:
     try:
-        return run_apophis_validation(
-            ApophisValidationConfig(
+        return executar_validacao_apophis(
+            ConfiguracaoValidacaoApophis(
                 steps=request.steps,
                 dt_days=request.dt_days,
                 fixture_name=request.fixture_name,
@@ -60,6 +64,6 @@ def validate_apophis(request: SimulateRequest) -> dict[str, object]:
             )
         )
     except FileNotFoundError as exc:
-        raise HTTPException(status_code=404, detail=f"Fixture not found: {request.fixture_name}") from exc
+        raise HTTPException(status_code=404, detail=f"Cenario nao encontrado: {request.fixture_name}") from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc

@@ -1,5 +1,5 @@
 {
-  "fixture_name": "apophis/apophis_fixture.json",
+  "fixture_name": "apophis/cenario_apophis.json",
   "steps": 180,
   "dt_days": 1.0,
   "checkpoint_path": null,

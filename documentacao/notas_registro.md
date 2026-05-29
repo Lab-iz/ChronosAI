@@ -1,21 +1,21 @@
-# Registry Notes
+# Notas de Registro
 
-Original CHRONOS-SAFE code in this repository includes:
+O codigo original do CHRONOS-SEGURO neste repositorio inclui:
 
-- domain contracts;
-- physics layer;
-- dataset generation and preprocessing;
-- residual GNN implementation;
-- safety guard and fallback orchestration;
-- CLI and API integration;
-- evaluation and validation workflows.
+- contratos de dominio;
+- camada de fisica;
+- geracao e preprocessamento de conjuntos de dados;
+- implementacao da GNN residual;
+- guarda de seguranca e orquestracao de fallback;
+- integracao por CLI e API;
+- fluxos de avaliacao e validacao.
 
-Third-party libraries remain external dependencies and are not part of the claimed original authorship.
+Bibliotecas de terceiros continuam como dependencias externas e nao fazem parte da autoria original reivindicada.
 
-Before freezing a registrable release, record:
+Antes de congelar uma versao registravel, registrar:
 
-- release date;
-- VCS commit/tag;
-- artifact checksum;
-- dependency lock snapshot;
-- generated validation report bundle.
+- data de liberacao;
+- commit ou tag no controle de versao;
+- checksum do artefato;
+- snapshot de dependencias;
+- pacote de relatorios de validacao gerados.

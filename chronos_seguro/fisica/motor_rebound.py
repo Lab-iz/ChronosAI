@@ -6,9 +6,9 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from chronos_safe.config.constants import DEFAULT_REFERENCE_SUBSTEPS
-from chronos_safe.domain.state import SystemState
-from chronos_safe.physics.quick_integrator import QuickIntegrator, pairwise_accelerations
+from chronos_seguro.configuracao.constantes import DEFAULT_REFERENCE_SUBSTEPS
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.fisica.integrador_rapido import QuickIntegrator, pairwise_accelerations
 
 try:
     import rebound  # type: ignore
@@ -47,7 +47,7 @@ class ReboundReferenceEngine:
 
     def _step_with_rebound(self, state: SystemState) -> SystemState:
         sim = rebound.Simulation()
-        sim.units = ("AU", "days", "Msun")
+        sim.unidades = ("AU", "days", "Msun")
         sim.integrator = "ias15"
         for body_id, mass, position, velocity in zip(state.ids, state.masses, state.positions, state.velocities, strict=True):
             sim.add(

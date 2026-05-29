@@ -1,21 +1,21 @@
-# Apophis Protocol
+# Protocolo Apophis
 
-## v1.0 protocol
+## Protocolo v1.0
 
-- Fixture: `data/fixtures/apophis/apophis_fixture.json`
-- Horizon: `180 days`
-- Step size: `1 day`
-- Bodies: `Sun`, `Earth`, `Apophis`
-- Outputs: JSON report and text summary in `reports/validation/`
+- Cenario: `dados/cenarios/apophis/cenario_apophis.json`
+- Horizonte: `180 dias`
+- Passo: `1 dia`
+- Corpos: `Sun`, `Earth`, `Apophis`
+- Saidas: relatorio JSON e resumo em texto em `relatorios/validacao/`
 
-## Procedure
+## Procedimento
 
-1. Load the frozen offline fixture.
-2. Run the reference engine rollout.
-3. Run the hybrid rollout with safety fallback enabled.
-4. Compare trajectories and Earth-Apophis distance.
-5. Save drift, error, fallback and runtime metrics.
+1. Carregar o fixture offline congelado.
+2. Executar a propagacao do motor de referencia.
+3. Executar a propagacao hibrida com fallback de seguranca ativo.
+4. Comparar trajetorias e distancia Terra-Apophis.
+5. Salvar metricas de drift, erro, fallback e tempo de execucao.
 
-## Important caveat
+## Observacao importante
 
-The included fixture is a regression artifact, not a final ephemeris product. It is intended to validate software behavior and compare hybrid vs baseline execution paths in a reproducible way.
+O fixture incluido e um artefato de regressao, nao um produto final de efemerides. Ele existe para validar o comportamento do software e comparar caminhos de execucao hibrido e baseline de forma reproduzivel.

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from chronos_safe.domain.state import SystemState
+from chronos_seguro.dominio.estado import SystemState
 
 
 def center_of_mass(state: SystemState) -> np.ndarray:

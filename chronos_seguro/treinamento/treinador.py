@@ -1,4 +1,4 @@
-"""Training loop."""
+"""Laco de treinamento."""
 
 from __future__ import annotations
 
@@ -7,13 +7,13 @@ from pathlib import Path
 
 import numpy as np
 
-from chronos_safe.data.datasets import ChronosDataset, DatasetBundle
-from chronos_safe.models.ood_guard import OODGuard
-from chronos_safe.models.residual_gnn import ResidualGNN, ResidualGNNConfig
-from chronos_safe.training.checkpointing import save_model_checkpoint, save_training_manifest
-from chronos_safe.training.losses import composite_loss
-from chronos_safe.utils.device import get_device
-from chronos_safe.utils.seed import set_seed
+from chronos_seguro.dados.conjuntos_dados import ChronosDataset, DatasetBundle
+from chronos_seguro.modelos.guarda_ood import OODGuard
+from chronos_seguro.modelos.gnn_residual import ResidualGNN, ResidualGNNConfig
+from chronos_seguro.treinamento.pontos_controle import save_model_checkpoint, save_training_manifest
+from chronos_seguro.treinamento.perdas import composite_loss
+from chronos_seguro.utilitarios.dispositivo import get_device
+from chronos_seguro.utilitarios.semente import set_seed
 
 try:
     import torch
@@ -25,14 +25,14 @@ except ImportError:  # pragma: no cover - optional dependency
 
 
 @dataclass(slots=True)
-class TrainingConfig:
+class ConfiguracaoTreinamento:
     dataset_dir: Path
     output_dir: Path
     epochs: int = 20
     batch_size: int = 16
     learning_rate: float = 1.0e-3
     weight_decay: float = 1.0e-5
-    validation_fraction: float = 0.2
+    fracao_validacao: float = 0.2
     patience: int = 5
     device: str = "cpu"
     seed: int = 42
@@ -42,12 +42,12 @@ class TrainingConfig:
 
 def _require_torch() -> None:
     if torch is None or DataLoader is None or random_split is None:  # pragma: no cover
-        raise RuntimeError("PyTorch is required for training. Install the 'ml' extras.")
+        raise RuntimeError("PyTorch e necessario para treinamento. Instale os extras 'ml'.")
 
 
-def _split_dataset(dataset: ChronosDataset, validation_fraction: float, seed: int):
+def _split_dataset(dataset: ChronosDataset, fracao_validacao: float, seed: int):
     _require_torch()
-    val_size = max(1, int(len(dataset) * validation_fraction))
+    val_size = max(1, int(len(dataset) * fracao_validacao))
     train_size = max(1, len(dataset) - val_size)
     if train_size + val_size > len(dataset):
         val_size = len(dataset) - train_size
@@ -79,11 +79,11 @@ def _epoch(model, loader, optimizer, device: str, train: bool) -> float:
     return float(np.mean(losses)) if losses else 0.0
 
 
-def train_model(config: TrainingConfig) -> dict[str, object]:
+def treinar_modelo(config: ConfiguracaoTreinamento) -> dict[str, object]:
     _require_torch()
     set_seed(config.seed)
     dataset = ChronosDataset(config.dataset_dir)
-    train_dataset, val_dataset = _split_dataset(dataset, config.validation_fraction, config.seed)
+    train_dataset, val_dataset = _split_dataset(dataset, config.fracao_validacao, config.seed)
     train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
 
@@ -151,3 +151,7 @@ def train_model(config: TrainingConfig) -> dict[str, object]:
         "scaler_path": str(config.output_dir / "scaler.json"),
         "ood_guard_path": str(config.output_dir / "ood_guard.json"),
     }
+
+
+TrainingConfig = ConfiguracaoTreinamento
+train_model = treinar_modelo

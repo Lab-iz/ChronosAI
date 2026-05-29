@@ -1,5 +1,5 @@
-CHRONOS-SAFE Apophis Validation Summary
-Fixture: apophis/apophis_fixture.json
+CHRONOS-SEGURO Apophis Validation Summary
+Fixture: apophis/cenario_apophis.json
 Steps: 180
 dt_days: 1.0
 Fallback count: 0

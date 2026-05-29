@@ -1,9 +1,9 @@
 import pytest
 from pydantic import ValidationError
 
-from chronos_safe.apps.api.schemas import GenerateGeneralistRequest
+from chronos_seguro.aplicativos.api.esquemas import RequisicaoGerarGeneralista
 
 
-def test_generalist_schema_rejects_invalid_body_range() -> None:
+def test_esquema_generalista_rejeita_intervalo_corpos_invalido() -> None:
     with pytest.raises(ValidationError):
-        GenerateGeneralistRequest(output_dir="data/processed/bad", min_bodies=5, max_bodies=3)
+        RequisicaoGerarGeneralista(output_dir="dados/processados/invalido", min_bodies=5, max_bodies=3)

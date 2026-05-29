@@ -1,6 +1,6 @@
 {
-  "kind": "specialist",
-  "fixture_name": "apophis/apophis_fixture.json",
+  "kind": "especialista",
+  "fixture_name": "apophis/cenario_apophis.json",
   "num_samples": 4,
   "dt_days": 1.0,
   "seed": 42,

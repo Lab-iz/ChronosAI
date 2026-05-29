@@ -1,20 +1,20 @@
-"""Training routes."""
+"""Rotas de treinamento."""
 
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 
-from chronos_safe.apps.api.schemas import TrainRequest
+from chronos_seguro.aplicativos.api.esquemas import RequisicaoTreinamento
 
-router = APIRouter(prefix="/train", tags=["training"])
+router = APIRouter(prefix="/treinar", tags=["treinamento"])
 
 
-@router.post("/generalist")
-def train_generalist(request: TrainRequest) -> dict[str, object]:
+@router.post("/generalista")
+def treinar_generalista(request: RequisicaoTreinamento) -> dict[str, object]:
     try:
-        from chronos_safe.training.train_generalist import run_train_generalist
+        from chronos_seguro.treinamento.treinar_generalista import executar_treino_generalista
 
-        return run_train_generalist(
+        return executar_treino_generalista(
             dataset_dir=request.dataset_dir,
             output_dir=request.output_dir,
             epochs=request.epochs,
@@ -26,12 +26,12 @@ def train_generalist(request: TrainRequest) -> dict[str, object]:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
-@router.post("/specialist")
-def train_specialist(request: TrainRequest) -> dict[str, object]:
+@router.post("/especialista")
+def treinar_especialista(request: RequisicaoTreinamento) -> dict[str, object]:
     try:
-        from chronos_safe.training.train_specialist import run_train_specialist
+        from chronos_seguro.treinamento.treinar_especialista import executar_treino_especialista
 
-        return run_train_specialist(
+        return executar_treino_especialista(
             dataset_dir=request.dataset_dir,
             output_dir=request.output_dir,
             base_checkpoint=request.base_checkpoint,

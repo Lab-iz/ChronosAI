@@ -1,38 +1,22 @@
-# Como Rodar o CHRONOS-SAFE
+# Como Rodar o CHRONOS-SEGURO
 
-Este guia mostra o passo a passo para instalar e executar o projeto localmente.
+Este guia mostra o caminho recomendado para instalar, executar e avaliar o projeto localmente.
 
-Se voce nao quer estudar fisica orbital nem treinar modelos agora, siga apenas a secao `Rota rapida para avaliacao`.
-
-Os comandos de instalacao abaixo assumem que voce esta dentro da pasta do pacote:
+Todos os comandos partem da raiz do repositorio:
 
 ```text
-<repositorio>\chronos_safe
+<repositorio>
 ```
 
-O launcher web fica somente na raiz do repositorio:
+O projeto mantem apenas um inicializador web na raiz:
 
 ```text
-<repositorio>\run.py
-```
-
-Para instalar e usar a CLI, entre no pacote:
-
-```powershell
-cd chronos_safe
-```
-
-## 1. Entrar na pasta do projeto
-
-Abra o terminal na raiz do projeto:
-
-```powershell
-cd <repositorio>\chronos_safe
+run.py
 ```
 
 ## Rota rapida para avaliacao
 
-Esse e o caminho mais curto para alguem que so quer entender o sistema.
+Use este fluxo quando o objetivo for apenas abrir a demonstracao e entender o sistema.
 
 1. Instale o projeto:
 
@@ -43,7 +27,6 @@ python -m pip install -e ".[ml,science,dev]"
 2. Rode a interface:
 
 ```powershell
-cd ..
 python run.py
 ```
 
@@ -53,35 +36,30 @@ python run.py
 http://127.0.0.1:8000/
 ```
 
-4. Dentro da interface, use somente isto:
+4. Dentro da interface, use:
 
 - `1. Ver demo 3D`
 - `2. Rodar teste Apophis`
 
 5. Leia o painel `Relatorio guiado`.
 
-Se o objetivo for deploy no Render, leia tambem [docs/render_deploy.md](render_deploy.md).
+Para deploy publico, veja [Deploy no Render](deploy_render.md).
 
-## 2. Criar um ambiente virtual
+## Ambiente virtual
 
-Recomendado usar Python `3.11` ou `3.12`.
+Use Python `3.11` ou `3.12`. O projeto declara `>=3.11,<3.14`.
 
 No Windows:
 
 ```powershell
 py -3.12 -m venv .venv
 .venv\Scripts\Activate.ps1
-```
-
-Se voce so tiver Python `3.13` ou `3.14`, use um ambiente `3.11` ou `3.12` para a stack completa declarada no `pyproject.toml`.
-
-## 3. Atualizar o pip
-
-```powershell
 python -m pip install --upgrade pip
 ```
 
-## 4. Instalar dependencias
+Se a maquina tiver apenas Python `3.13` ou `3.14`, instale uma versao `3.11` ou `3.12` para rodar a stack completa.
+
+## Instalacao
 
 Instalacao minima:
 
@@ -89,162 +67,141 @@ Instalacao minima:
 python -m pip install -e .
 ```
 
-Instalacao para treino:
-
-```powershell
-python -m pip install -e ".[ml,dev]"
-```
-
-Instalacao recomendada no Windows:
+Instalacao recomendada para treino, ciencia e desenvolvimento:
 
 ```powershell
 python -m pip install -e ".[ml,science,dev]"
 ```
 
-Isso instala a interface web, treino, dados e ferramentas de desenvolvimento.
-
-## 5. Instalar REBOUND separadamente
-
-`REBOUND` ficou separado de `science` porque em muitos ambientes Windows ele exige compilacao C/C++.
-
-Tente assim:
+REBOUND e opcional:
 
 ```powershell
-python -m pip install -r requirements-rebound.txt
+python -m pip install -r requisitos-rebound.txt
 ```
 
-Se funcionar, o projeto passa a usar `REBOUND IAS15` automaticamente.
+Se `rebound` falhar no Windows por compilador C/C++, o sistema continua funcionando com o backend de referencia em NumPy.
 
-Se falhar com erro como:
-
-```text
-Microsoft Visual C++ 14.0 or greater is required
-```
-
-voce pode continuar sem `rebound`. O projeto ainda roda com o backend de referencia em NumPy.
-
-## 6. Rodar os testes
+## Testes
 
 ```powershell
 python -m pytest -q
 ```
 
-## 7. Gerar dataset generalista
+## Gerar conjunto generalista
 
 ```powershell
-python -m chronos_safe.apps.cli.main generate-generalist `
-  --output-dir data/processed/generalist `
-  --num-samples 128 `
-  --min-bodies 2 `
-  --max-bodies 6 `
-  --dt-days 1.0
+python -m chronos_seguro.aplicativos.linha_comando.principal gerar-generalista `
+  --diretorio-saida dados/processados/generalista `
+  --num-amostras 128 `
+  --min-corpos 2 `
+  --max-corpos 6 `
+  --dt-dias 1.0
 ```
 
 Arquivos gerados:
 
-- `data/processed/generalist/dataset.npz`
-- `data/processed/generalist/manifest.json`
-- `data/processed/generalist/scaler.json`
+- `dados/processados/generalista/dataset.npz`
+- `dados/processados/generalista/manifest.json`
+- `dados/processados/generalista/scaler.json`
 
-## 8. Gerar dataset especialista
+## Gerar conjunto especialista
 
 ```powershell
-python -m chronos_safe.apps.cli.main generate-specialist `
-  --output-dir data/processed/specialist `
-  --fixture-name apophis/apophis_fixture.json `
-  --num-samples 64 `
-  --dt-days 1.0
+python -m chronos_seguro.aplicativos.linha_comando.principal gerar-especialista `
+  --diretorio-saida dados/processados/especialista `
+  --cenario apophis/cenario_apophis.json `
+  --num-amostras 64 `
+  --dt-dias 1.0
 ```
 
 Arquivos gerados:
 
-- `data/processed/specialist/dataset.npz`
-- `data/processed/specialist/manifest.json`
-- `data/processed/specialist/scaler.json`
+- `dados/processados/especialista/dataset.npz`
+- `dados/processados/especialista/manifest.json`
+- `dados/processados/especialista/scaler.json`
 
-## 9. Treinar o modelo generalista
+## Treinar modelo generalista
 
 ```powershell
-python -m chronos_safe.apps.cli.main train-generalist `
-  --dataset-dir data/processed/generalist `
-  --output-dir models/checkpoints/generalist `
-  --epochs 20 `
-  --batch-size 16
+python -m chronos_seguro.aplicativos.linha_comando.principal treinar-generalista `
+  --diretorio-dataset dados/processados/generalista `
+  --diretorio-saida modelos/pontos_controle/generalista `
+  --epocas 20 `
+  --tamanho-lote 16
 ```
 
 Arquivos esperados:
 
-- `models/checkpoints/generalist/model.pt`
-- `models/checkpoints/generalist/ood_guard.json`
-- `models/checkpoints/generalist/scaler.json`
-- `models/checkpoints/generalist/training_manifest.json`
+- `modelos/pontos_controle/generalista/model.pt`
+- `modelos/pontos_controle/generalista/ood_guard.json`
+- `modelos/pontos_controle/generalista/scaler.json`
+- `modelos/pontos_controle/generalista/training_manifest.json`
 
-## 10. Fazer fine-tuning especialista
+## Fazer ajuste especialista
 
 ```powershell
-python -m chronos_safe.apps.cli.main train-specialist `
-  --dataset-dir data/processed/specialist `
-  --output-dir models/checkpoints/specialist `
-  --base-checkpoint models/checkpoints/generalist/model.pt `
-  --epochs 10 `
-  --batch-size 16
+python -m chronos_seguro.aplicativos.linha_comando.principal treinar-especialista `
+  --diretorio-dataset dados/processados/especialista `
+  --diretorio-saida modelos/pontos_controle/especialista `
+  --ponto-controle-base modelos/pontos_controle/generalista/model.pt `
+  --epocas 10 `
+  --tamanho-lote 16
 ```
 
-## 11. Rodar uma simulacao hibrida
+## Rodar simulacao hibrida
 
 Sem modelo treinado:
 
 ```powershell
-python -m chronos_safe.apps.cli.main simulate `
-  --fixture-name apophis/apophis_fixture.json `
-  --steps 30 `
-  --dt-days 1.0 `
-  --output-path reports/validation/simulation.json
+python -m chronos_seguro.aplicativos.linha_comando.principal simular `
+  --cenario apophis/cenario_apophis.json `
+  --passos 30 `
+  --dt-dias 1.0 `
+  --saida relatorios/validacao/simulacao.json
 ```
 
 Com modelo treinado:
 
 ```powershell
-python -m chronos_safe.apps.cli.main simulate `
-  --fixture-name apophis/apophis_fixture.json `
-  --steps 30 `
-  --dt-days 1.0 `
-  --checkpoint-path models/checkpoints/specialist/model.pt `
-  --scaler-path models/checkpoints/specialist/scaler.json `
-  --ood-guard-path models/checkpoints/specialist/ood_guard.json `
-  --output-path reports/validation/simulation.json
+python -m chronos_seguro.aplicativos.linha_comando.principal simular `
+  --cenario apophis/cenario_apophis.json `
+  --passos 30 `
+  --dt-dias 1.0 `
+  --ponto-controle modelos/pontos_controle/especialista/model.pt `
+  --escalonador modelos/pontos_controle/especialista/scaler.json `
+  --guarda-ood modelos/pontos_controle/especialista/ood_guard.json `
+  --saida relatorios/validacao/simulacao.json
 ```
 
-## 12. Rodar a validacao Apophis
+## Rodar validacao Apophis
 
 ```powershell
-python -m chronos_safe.apps.cli.main validate-apophis `
-  --steps 180 `
-  --dt-days 1.0
+python -m chronos_seguro.aplicativos.linha_comando.principal validar-apophis `
+  --passos 180 `
+  --dt-dias 1.0
 ```
 
 Com modelo treinado:
 
 ```powershell
-python -m chronos_safe.apps.cli.main validate-apophis `
-  --steps 180 `
-  --dt-days 1.0 `
-  --checkpoint-path models/checkpoints/specialist/model.pt `
-  --scaler-path models/checkpoints/specialist/scaler.json `
-  --ood-guard-path models/checkpoints/specialist/ood_guard.json
+python -m chronos_seguro.aplicativos.linha_comando.principal validar-apophis `
+  --passos 180 `
+  --dt-dias 1.0 `
+  --ponto-controle modelos/pontos_controle/especialista/model.pt `
+  --escalonador modelos/pontos_controle/especialista/scaler.json `
+  --guarda-ood modelos/pontos_controle/especialista/ood_guard.json
 ```
 
 Relatorios gerados:
 
-- `reports/validation/apophis_validation.json`
-- `reports/validation/apophis_validation_summary.txt`
+- `relatorios/validacao/validacao_apophis.json`
+- `relatorios/validacao/resumo_validacao_apophis.txt`
 
-## 13. Subir a interface web
+## Subir a interface web
 
-Forma mais simples:
+Forma padrao:
 
 ```powershell
-cd ..
 python run.py
 ```
 
@@ -254,15 +211,7 @@ Endereco padrao:
 http://127.0.0.1:8000/
 ```
 
-Se voce ja estiver na raiz do repositorio, use diretamente:
-
-```powershell
-python run.py
-```
-
-O projeto mantem apenas esse launcher para evitar entradas duplicadas.
-
-Se quiser subir sem abrir o navegador:
+Sem abrir navegador automaticamente:
 
 ```powershell
 $env:CHRONOS_OPEN_BROWSER="false"
@@ -272,38 +221,27 @@ python run.py
 Forma manual:
 
 ```powershell
-uvicorn chronos_safe.apps.api.main:app --reload
+uvicorn chronos_seguro.aplicativos.api.principal:app --reload
 ```
 
-## 14. Usar a interface web
+## Interface web
 
-Ao abrir `http://127.0.0.1:8000/`, voce tera uma dashboard com:
+A interface oferece:
 
 - visualizacao 3D de orbitas no navegador;
-- modo avaliacao rapida com demo 3D e teste Apophis em um clique;
-- secao avancada recolhida para geracao de datasets, treino e simulacao manual;
+- modo de avaliacao rapida com demo 3D e teste Apophis;
+- area avancada recolhida para geracao de dados, treino e simulacao manual;
 - validacao Apophis com leitura guiada das metricas;
-- catalogo automatico de fixtures, checkpoints, scalers e relatorios.
+- catalogo automatico de cenarios, pontos de controle, escalonadores e relatorios.
 
-### O que o avaliador deve fazer
+Para avaliacao rapida:
 
-Se a pessoa estiver avaliando a plataforma e nao a pesquisa inteira:
+1. Abra a pagina.
+2. Clique em `1. Ver demo 3D`.
+3. Clique em `2. Rodar teste Apophis`.
+4. Leia o `Relatorio guiado`.
 
-1. abrir a pagina;
-2. clicar em `1. Ver demo 3D`;
-3. clicar em `2. Rodar teste Apophis`;
-4. ler o `Relatorio guiado`.
-
-### O que o caso Apophis mostra
-
-O teste Apophis existe para mostrar, de forma concreta, quatro coisas:
-
-- se a simulacao hibrida acompanha a referencia fisica;
-- quanto erro acumulado aparece ao longo do rollout;
-- se houve drift fisico relevante;
-- se o sistema precisou acionar fallback.
-
-## 15. Problemas comuns
+## Problemas comuns
 
 ### `torch` nao instala no Windows
 
@@ -315,22 +253,18 @@ Se falhar por compilador C++, continue sem ele por enquanto. O sistema usa o bac
 
 ### `chronos` nao foi reconhecido
 
-Use o entrypoint direto:
+Use a entrada direta:
 
 ```powershell
-python -m chronos_safe.apps.cli.main <comando>
+python -m chronos_seguro.aplicativos.linha_comando.principal <comando>
 ```
 
 ### `pip install` falhou com `Fatal error in launcher`
 
-Use sempre:
+Use:
 
 ```powershell
 python -m pip install -e ".[ml,science,dev]"
 ```
 
-em vez de:
-
-```powershell
-pip install -e ".[ml,science,dev]"
-```
+em vez de chamar `pip` diretamente.

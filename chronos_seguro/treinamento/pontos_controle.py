@@ -1,11 +1,11 @@
-"""Checkpoint helpers."""
+"""Utilitarios para pontos de controle."""
 
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
-from chronos_safe.utils.serialization import write_json
+from chronos_seguro.utilitarios.serializacao import write_json
 
 try:
     import torch
@@ -23,7 +23,7 @@ def save_model_checkpoint(
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     if torch is None:  # pragma: no cover - exercised only without torch
-        raise RuntimeError("PyTorch is required to save model checkpoints.")
+        raise RuntimeError("PyTorch e necessario para salvar pontos de controle do modelo.")
     torch.save(
         {
             "epoch": epoch,
@@ -37,7 +37,7 @@ def save_model_checkpoint(
 
 def load_model_checkpoint(path: str | Path, model: object, optimizer: object | None = None) -> dict[str, Any]:
     if torch is None:  # pragma: no cover - exercised only without torch
-        raise RuntimeError("PyTorch is required to load model checkpoints.")
+        raise RuntimeError("PyTorch e necessario para carregar pontos de controle do modelo.")
     payload = torch.load(Path(path), map_location="cpu")
     model.load_state_dict(payload["model_state_dict"])
     if optimizer is not None and payload["optimizer_state_dict"] is not None:

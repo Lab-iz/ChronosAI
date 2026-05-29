@@ -1,4 +1,4 @@
-"""State standardization and dataset sample construction."""
+"""Padronizacao de estados e construcao de amostras de dataset."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from chronos_safe.domain.state import SystemState
-from chronos_safe.physics.frames import standardize_state
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.fisica.referenciais import standardize_state
 
 
 @dataclass(slots=True)
@@ -46,7 +46,7 @@ def pad_ids(ids: list[str], max_bodies: int) -> list[str]:
     return padded
 
 
-def build_processed_sample(
+def construir_amostra_processada(
     initial_state: SystemState,
     teacher_next: SystemState,
     quick_next: SystemState,

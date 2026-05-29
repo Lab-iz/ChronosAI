@@ -1,1 +1,1 @@
-"""Training package."""
+"""Pacote de treinamento."""

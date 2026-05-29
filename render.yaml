@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: chronos-safe
+    name: chronos-seguro
     runtime: python
-    rootDir: chronos_safe
+    rootDir: .
     buildCommand: python -m pip install -e .
-    startCommand: python -m uvicorn chronos_safe.apps.api.main:app --host 0.0.0.0 --port $PORT
+    startCommand: python -m uvicorn chronos_seguro.aplicativos.api.principal:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     autoDeploy: true
     envVars:

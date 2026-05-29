@@ -1,4 +1,4 @@
-"""NPZ and JSON cache helpers."""
+"""Utilitarios de cache NPZ e JSON."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from typing import Any
 
 import numpy as np
 
-from chronos_safe.utils.serialization import read_json, write_json
+from chronos_seguro.utilitarios.serializacao import read_json, write_json
 
 
 def save_npz_bundle(path: str | Path, arrays: dict[str, np.ndarray]) -> None:

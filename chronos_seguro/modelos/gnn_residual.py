@@ -1,4 +1,4 @@
-"""Residual graph neural network."""
+"""Rede neural em grafo residual."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ class ResidualGNNConfig:
 
 def _require_torch() -> None:
     if torch is None or nn is None:  # pragma: no cover - exercised only without torch
-        raise RuntimeError("PyTorch is required for ResidualGNN. Install the 'ml' extras.")
+        raise RuntimeError("PyTorch e necessario para ResidualGNN. Instale os extras 'ml'.")
 
 
 if nn is not None:

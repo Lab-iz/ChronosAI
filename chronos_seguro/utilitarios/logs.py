@@ -1,4 +1,4 @@
-"""Structured logging helpers."""
+"""Utilitarios de logs estruturados."""
 
 from __future__ import annotations
 

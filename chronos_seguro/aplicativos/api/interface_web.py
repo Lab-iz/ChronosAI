@@ -1,13 +1,13 @@
-"""Web dashboard helpers."""
+"""Utilitarios da interface web."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from chronos_safe.config.settings import SETTINGS
+from chronos_seguro.configuracao.ajustes import SETTINGS
 
 
-def _relative_paths(root: Path, patterns: tuple[str, ...]) -> list[str]:
+def _caminhos_relativos(root: Path, patterns: tuple[str, ...]) -> list[str]:
     results: list[str] = []
     for pattern in patterns:
         for path in sorted(root.rglob(pattern)):
@@ -16,38 +16,38 @@ def _relative_paths(root: Path, patterns: tuple[str, ...]) -> list[str]:
     return results
 
 
-def build_catalog_payload() -> dict[str, object]:
+def montar_payload_catalogo() -> dict[str, object]:
     return {
-        "fixtures": _relative_paths(SETTINGS.data_root / "fixtures", ("*.json",)),
-        "processed_datasets": sorted(
+        "cenarios": _caminhos_relativos(SETTINGS.data_root / "cenarios", ("*.json",)),
+        "processados_datasets": sorted(
             [
                 path.relative_to(SETTINGS.project_root).as_posix()
-                for path in (SETTINGS.data_root / "processed").glob("*")
+                for path in (SETTINGS.data_root / "processados").glob("*")
                 if path.is_dir()
             ]
         ),
-        "checkpoints": _relative_paths(SETTINGS.models_root / "checkpoints", ("*.pt",)),
-        "scalers": _relative_paths(SETTINGS.models_root / "checkpoints", ("scaler.json",)),
-        "ood_guards": _relative_paths(SETTINGS.models_root / "checkpoints", ("ood_guard.json",)),
-        "reports": _relative_paths(SETTINGS.reports_root / "validation", ("*.json", "*.txt")),
+        "pontos_controle": _caminhos_relativos(SETTINGS.models_root / "pontos_controle", ("*.pt",)),
+        "scalers": _caminhos_relativos(SETTINGS.models_root / "pontos_controle", ("scaler.json",)),
+        "ood_guards": _caminhos_relativos(SETTINGS.models_root / "pontos_controle", ("ood_guard.json",)),
+        "reports": _caminhos_relativos(SETTINGS.reports_root / "validacao", ("*.json", "*.txt")),
         "defaults": {
-            "generalist_dataset_dir": str((SETTINGS.data_root / "processed" / "generalist").as_posix()),
-            "specialist_dataset_dir": str((SETTINGS.data_root / "processed" / "specialist").as_posix()),
-            "generalist_checkpoint_dir": str((SETTINGS.models_root / "checkpoints" / "generalist").as_posix()),
-            "specialist_checkpoint_dir": str((SETTINGS.models_root / "checkpoints" / "specialist").as_posix()),
-            "simulation_output_path": str((SETTINGS.reports_root / "validation" / "simulation.json").as_posix()),
-            "default_fixture": "apophis/apophis_fixture.json",
+            "generalista_dataset_dir": str((SETTINGS.data_root / "processados" / "generalista").as_posix()),
+            "especialista_dataset_dir": str((SETTINGS.data_root / "processados" / "especialista").as_posix()),
+            "generalista_checkpoint_dir": str((SETTINGS.models_root / "pontos_controle" / "generalista").as_posix()),
+            "especialista_checkpoint_dir": str((SETTINGS.models_root / "pontos_controle" / "especialista").as_posix()),
+            "simulation_output_path": str((SETTINGS.reports_root / "validacao" / "simulacao.json").as_posix()),
+            "default_fixture": "apophis/cenario_apophis.json",
         },
     }
 
 
-def render_dashboard_html() -> str:
+def renderizar_html_painel() -> str:
     return """<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CHRONOS-SAFE | Aula Apophis</title>
+  <title>CHRONOS-SEGURO | Aula Apophis</title>
   <link rel="icon" type="image/png" href="/static/chronosfav.png">
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
@@ -660,7 +660,7 @@ input, select, textarea, button {
       white-space: pre-wrap;
     }
 
-    .results-shell {
+    .resultados-shell {
       display: grid;
       gap: 16px;
     }
@@ -809,7 +809,7 @@ input, select, textarea, button {
       color: var(--muted);
     }
 
-    .results-topline {
+    .resultados-topline {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -817,12 +817,12 @@ input, select, textarea, button {
       flex-wrap: wrap;
     }
 
-    .results-title {
+    .resultados-title {
       display: grid;
       gap: 4px;
     }
 
-    .results-kicker {
+    .resultados-kicker {
       text-transform: uppercase;
       letter-spacing: 0.12em;
       font-size: 0.78rem;
@@ -830,26 +830,26 @@ input, select, textarea, button {
       font-weight: 700;
     }
 
-    .results-heading {
+    .resultados-heading {
       font-size: 1.25rem;
       font-family: var(--serif);
       margin: 0;
     }
 
-    .results-subtitle {
+    .resultados-subtitle {
       margin: 0;
       color: var(--muted);
       font-size: 0.92rem;
       line-height: 1.45;
     }
 
-    .results-badges {
+    .resultados-badges {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    .results-badge {
+    .resultados-badge {
       padding: 7px 11px;
       border-radius: 999px;
       border: 1px solid var(--line);
@@ -858,7 +858,7 @@ input, select, textarea, button {
       color: var(--ink);
     }
 
-    .results-grid {
+    .resultados-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 16px;
@@ -893,7 +893,7 @@ input, select, textarea, button {
       word-break: break-word;
     }
 
-    .results-stack {
+    .resultados-stack {
       display: grid;
       gap: 12px;
     }
@@ -1028,7 +1028,7 @@ input, select, textarea, button {
       .hero,
       .grid,
       .row,
-      .results-grid,
+      .resultados-grid,
       .metric-grid,
       .guide-grid,
       .usage-grid,
@@ -1042,11 +1042,11 @@ input, select, textarea, button {
         grid-column: auto;
       }
 
-      .results-topline {
+      .resultados-topline {
         align-items: flex-start;
       }
 
-      .results-badges {
+      .resultados-badges {
         width: 100%;
       }
 
@@ -1135,18 +1135,18 @@ input, select, textarea, button {
       .summary-copy,
       .summary-note,
       .hint,
-      .results-subtitle,
+      .resultados-subtitle,
       .risk-description {
         font-size: 0.92rem;
       }
 
       .badge-row,
-      .results-badges {
+      .resultados-badges {
         gap: 8px;
       }
 
       .badge,
-      .results-badge,
+      .resultados-badge,
       .risk-pill {
         font-size: 0.78rem;
         padding: 7px 10px;
@@ -1183,7 +1183,7 @@ input, select, textarea, button {
         font-size: 0.8rem;
       }
 
-      .results-heading {
+      .resultados-heading {
         font-size: 1.08rem;
       }
 
@@ -1231,11 +1231,11 @@ input, select, textarea, button {
         </div>
         <div class="stat">
           <span>Aulas prontas</span>
-          <strong id="fixtures-count">0</strong>
+          <strong id="cenarios-count">0</strong>
         </div>
         <div class="stat">
           <span>Coisas do professor</span>
-          <strong id="checkpoints-count">0</strong>
+          <strong id="pontos_controle-count">0</strong>
         </div>
       </aside>
     </section>
@@ -1317,11 +1317,11 @@ input, select, textarea, button {
           <button id="red-example-button" type="button" class="danger">Vermelho</button>
         </div>
       </div>
-      <form id="simulate-form" class="simulation-controls">
+      <form id="simulacao-form" class="simulation-controls">
         <label>
           <span class="field-title">Qual desenho?</span>
           <span class="field-help">Deixe Apophis para comecar.</span>
-          <select name="fixture_name" data-select="fixtures"></select>
+          <select name="fixture_name" data-select="cenarios"></select>
         </label>
         <label>
           <span class="field-title">Quantos pontinhos?</span>
@@ -1339,7 +1339,7 @@ input, select, textarea, button {
             <label>
               <span class="field-title">Ajuda treinada</span>
               <span class="field-help">Opcional. Use apenas quando houver uma ajuda salva para acelerar a conta.</span>
-              <select name="checkpoint_path" data-select="checkpoints" data-allow-empty="true"></select>
+              <select name="checkpoint_path" data-select="pontos_controle" data-allow-empty="true"></select>
             </label>
             <label>
               <span class="field-title">Régua da ajuda</span>
@@ -1359,7 +1359,7 @@ input, select, textarea, button {
                 </div>
                 <button id="sync-payload-button" type="button" class="secondary">Atualizar dados</button>
               </div>
-              <textarea id="simulation-payload-editor" spellcheck="false"></textarea>
+              <textarea id="editor-payload-simulacao" spellcheck="false"></textarea>
               <button id="run-payload-button" type="button" class="secondary">Rodar dados por dentro</button>
             </div>
           </div>
@@ -1388,9 +1388,9 @@ input, select, textarea, button {
       <section class="panel">
         <h2>1. Criar exemplos de estudo</h2>
         <div class="row">
-          <form id="generalist-form">
+          <form id="generalista-form">
             <label>Pasta para salvar
-              <input type="text" name="output_dir" data-fill="generalist_dataset_dir">
+              <input type="text" name="output_dir" data-fill="generalista_dataset_dir">
             </label>
             <div class="row">
               <label>Quantidade
@@ -1411,12 +1411,12 @@ input, select, textarea, button {
             <button type="submit">Criar exemplos gerais</button>
           </form>
 
-          <form id="specialist-form">
+          <form id="especialista-form">
             <label>Pasta para salvar
-              <input type="text" name="output_dir" data-fill="specialist_dataset_dir">
+              <input type="text" name="output_dir" data-fill="especialista_dataset_dir">
             </label>
             <label>Aula pronta
-              <select name="fixture_name" data-select="fixtures"></select>
+              <select name="fixture_name" data-select="cenarios"></select>
             </label>
             <div class="row">
               <label>Quantidade
@@ -1436,12 +1436,12 @@ input, select, textarea, button {
         <h2>2. Ensinar a ajuda do computador</h2>
         <p class="hint">Épocas sao rodadas de estudo. 1 época quer dizer: o computador olhou todos os exemplos uma vez. Mais épocas podem ensinar melhor, mas demoram mais.</p>
         <div class="row">
-          <form id="train-generalist-form">
+          <form id="treinar-generalista-form">
             <label>Exemplos gerais
-              <input type="text" name="dataset_dir" data-fill="generalist_dataset_dir">
+              <input type="text" name="dataset_dir" data-fill="generalista_dataset_dir">
             </label>
             <label>Pasta da ajuda salva
-              <input type="text" name="output_dir" data-fill="generalist_checkpoint_dir">
+              <input type="text" name="output_dir" data-fill="generalista_checkpoint_dir">
             </label>
             <div class="row">
               <label>Épocas
@@ -1455,15 +1455,15 @@ input, select, textarea, button {
             <button type="submit">Ensinar ajuda geral</button>
           </form>
 
-          <form id="train-specialist-form">
+          <form id="treinar-especialista-form">
             <label>Exemplos desta aula
-              <input type="text" name="dataset_dir" data-fill="specialist_dataset_dir">
+              <input type="text" name="dataset_dir" data-fill="especialista_dataset_dir">
             </label>
             <label>Ajuda inicial
-              <select name="base_checkpoint" data-select="checkpoints" data-allow-empty="true"></select>
+              <select name="base_checkpoint" data-select="pontos_controle" data-allow-empty="true"></select>
             </label>
             <label>Pasta da ajuda salva
-              <input type="text" name="output_dir" data-fill="specialist_checkpoint_dir">
+              <input type="text" name="output_dir" data-fill="especialista_checkpoint_dir">
             </label>
             <div class="row">
               <label>Épocas
@@ -1493,7 +1493,7 @@ input, select, textarea, button {
           </div>
           <div class="row">
             <label>Ajuda treinada
-              <select name="checkpoint_path" data-select="checkpoints" data-allow-empty="true"></select>
+              <select name="checkpoint_path" data-select="pontos_controle" data-allow-empty="true"></select>
             </label>
             <label>Régua da ajuda
               <select name="scaler_path" data-select="scalers" data-allow-empty="true"></select>
@@ -1573,7 +1573,7 @@ input, select, textarea, button {
   <script>
     const state = { catalog: null };
     const orbitPalette = ["#ffd166", "#7dd3fc", "#38bdf8", "#3b82f6", "#60a5fa", "#22d3ee", "#a5b4fc", "#2dd4bf", "#93c5fd"];
-    const simulationFieldNames = ["fixture_name", "steps", "dt_days", "checkpoint_path", "scaler_path", "ood_guard_path"];
+    const nomesCamposSimulacao = ["fixture_name", "steps", "dt_days", "checkpoint_path", "scaler_path", "ood_guard_path"];
 
     function setStatus(message) {
       document.getElementById("status-box").textContent = message;
@@ -1660,7 +1660,7 @@ input, select, textarea, button {
       reasons.push(makeReason(title, `${metricText(value, unit)}. ${detail}`));
     }
 
-    function validationRiskReasons(payload, level, values) {
+    function validacaoRiskReasons(payload, level, values) {
       if (level === "green") {
         return [
           makeReason("Desenho parecido", "O caminho ficou muito parecido com a conta usada para conferir."),
@@ -1789,7 +1789,7 @@ input, select, textarea, button {
           "Pode usar",
           "O desenho do Apophis ficou bom para a aula.",
           "verde",
-          validationRiskReasons(payload, "green", values)
+          validacaoRiskReasons(payload, "green", values)
         );
       }
 
@@ -1805,7 +1805,7 @@ input, select, textarea, button {
           "Chame o professor",
           "O desenho ainda aparece, mas tem sinal de cuidado.",
           "amarelo",
-          validationRiskReasons(payload, "yellow", values)
+          validacaoRiskReasons(payload, "yellow", values)
         );
       }
 
@@ -1814,7 +1814,7 @@ input, select, textarea, button {
         "Não confie ainda",
         "O desenho se afastou demais. Precisa revisar.",
         "vermelho",
-        validationRiskReasons(payload, "red", values)
+        validacaoRiskReasons(payload, "red", values)
       );
     }
 
@@ -1908,8 +1908,8 @@ input, select, textarea, button {
     }
 
     function buildReportModel(payload) {
-      if (payload && payload.benchmark) {
-        const hybrid = payload.benchmark.hybrid || {};
+      if (payload && payload.comparativo) {
+        const hybrid = payload.comparativo.hybrid || {};
         const hybridMetrics = (hybrid.metrics || {});
         const summaryMetrics = [
           ["Velocidade da conta", hybridMetrics.speedup_vs_reference],
@@ -2117,9 +2117,9 @@ input, select, textarea, button {
       element.value = normalizedValue;
     }
 
-    function simulationDefaults() {
+    function padroesSimulacao() {
       return {
-        fixture_name: state.catalog?.defaults?.default_fixture || "apophis/apophis_fixture.json",
+        fixture_name: state.catalog?.defaults?.default_fixture || "apophis/cenario_apophis.json",
         steps: 180,
         dt_days: 1.0,
         checkpoint_path: null,
@@ -2128,33 +2128,33 @@ input, select, textarea, button {
       };
     }
 
-    function simulationPayloadFromForm() {
-      return formPayload("simulate-form", simulationDefaults());
+    function payloadSimulacaoDoFormulario() {
+      return formPayload("simulacao-form", padroesSimulacao());
     }
 
-    function updateSimulationPayloadEditor(payload) {
-      const editor = document.getElementById("simulation-payload-editor");
+    function atualizarEditorPayloadSimulacao(payload) {
+      const editor = document.getElementById("editor-payload-simulacao");
       if (!editor) {
         return;
       }
-      editor.value = JSON.stringify(payload || simulationPayloadFromForm(), null, 2);
+      editor.value = JSON.stringify(payload || payloadSimulacaoDoFormulario(), null, 2);
     }
 
-    function applySimulationPreset(values) {
-      const payload = { ...simulationDefaults(), ...values };
-      simulationFieldNames.forEach((fieldName) => setFieldValueByName("simulate-form", fieldName, payload[fieldName]));
-      updateSimulationPayloadEditor(payload);
+    function aplicarPredefinicaoSimulacao(values) {
+      const payload = { ...padroesSimulacao(), ...values };
+      nomesCamposSimulacao.forEach((fieldName) => setFieldValueByName("simulacao-form", fieldName, payload[fieldName]));
+      atualizarEditorPayloadSimulacao(payload);
       return payload;
     }
 
-    function readSimulationPayloadEditor() {
-      const editor = document.getElementById("simulation-payload-editor");
+    function lerEditorPayloadSimulacao() {
+      const editor = document.getElementById("editor-payload-simulacao");
       try {
         return JSON.parse(editor.value || "{}");
       } catch (error) {
         setOutput({
           error: `Dados editados inválidos: ${error.message}`,
-          endpoint: "/simulate/trajectory",
+          endpoint: "/simular/trajetoria",
         });
         setStatus(`Erro: dados editados inválidos (${error.message})`);
         return null;
@@ -2197,30 +2197,30 @@ input, select, textarea, button {
       setStatus("Vermelho carregado: exemplo de quando não devemos confiar ainda.");
     }
 
-    function applyTrainingArtifacts(payload) {
+    function aplicarArtefatosTreinamento(payload) {
       if (!payload || !payload.checkpoint_path) {
         return;
       }
       const targets = [
-        ["simulate-form", "checkpoint_path", payload.checkpoint_path],
-        ["simulate-form", "scaler_path", payload.scaler_path],
-        ["simulate-form", "ood_guard_path", payload.ood_guard_path],
+        ["simulacao-form", "checkpoint_path", payload.checkpoint_path],
+        ["simulacao-form", "scaler_path", payload.scaler_path],
+        ["simulacao-form", "ood_guard_path", payload.ood_guard_path],
         ["apophis-form", "checkpoint_path", payload.checkpoint_path],
         ["apophis-form", "scaler_path", payload.scaler_path],
         ["apophis-form", "ood_guard_path", payload.ood_guard_path],
-        ["train-specialist-form", "base_checkpoint", payload.checkpoint_path],
+        ["treinar-especialista-form", "base_checkpoint", payload.checkpoint_path],
       ];
       targets.forEach(([formId, fieldName, value]) => setSelectValueByName(formId, fieldName, value));
     }
 
-    async function autoPreviewTrainingArtifacts(payload) {
+    async function previsualizarArtefatosTreinamento(payload) {
       if (!payload || !payload.checkpoint_path) {
         return;
       }
       await callApi(
-        "/simulate/trajectory",
+        "/simular/trajetoria",
         {
-          fixture_name: state.catalog?.defaults?.default_fixture || "apophis/apophis_fixture.json",
+          fixture_name: state.catalog?.defaults?.default_fixture || "apophis/cenario_apophis.json",
           steps: 180,
           dt_days: 1.0,
           checkpoint_path: payload.checkpoint_path,
@@ -2366,7 +2366,7 @@ input, select, textarea, button {
         }
         values.forEach((value) => {
           const option = document.createElement("option");
-          option.value = key === "fixtures" ? value : value.startsWith("models/") || value.startsWith("data/") || value.startsWith("reports/") ? value : `${key === "checkpoints" || key === "scalers" || key === "ood_guards" ? "models/checkpoints/" : ""}${value}`;
+          option.value = key === "cenarios" ? value : value.startsWith("modelos/") || value.startsWith("dados/") || value.startsWith("relatorios/") ? value : `${key === "pontos_controle" || key === "scalers" || key === "ood_guards" ? "modelos/pontos_controle/" : ""}${value}`;
           option.textContent = value;
           select.appendChild(option);
         });
@@ -2376,14 +2376,14 @@ input, select, textarea, button {
           option.textContent = "(vazio)";
           select.appendChild(option);
         }
-        const desiredValue = previousValue || (key === "fixtures" ? catalog.defaults?.default_fixture : "");
+        const desiredValue = previousValue || (key === "cenarios" ? catalog.defaults?.default_fixture : "");
         const desiredOptionExists = Array.from(select.options || []).some((option) => option.value === desiredValue);
         if (desiredValue && desiredOptionExists) {
           select.value = desiredValue;
         }
       });
-      document.getElementById("fixtures-count").textContent = String((catalog.fixtures || []).length);
-      document.getElementById("checkpoints-count").textContent = String((catalog.checkpoints || []).length);
+      document.getElementById("cenarios-count").textContent = String((catalog.cenarios || []).length);
+      document.getElementById("pontos_controle-count").textContent = String((catalog.pontos_controle || []).length);
     }
 
     async function loadHealth() {
@@ -2399,7 +2399,7 @@ input, select, textarea, button {
       state.catalog = payload;
       fillDefaults(payload);
       fillSelects(payload);
-      updateSimulationPayloadEditor();
+      atualizarEditorPayloadSimulacao();
       return payload;
     }
 
@@ -2422,10 +2422,10 @@ input, select, textarea, button {
         }
         setStatus("Pronto: resultado atualizado.");
         await loadCatalog();
-        applyTrainingArtifacts(payload);
-        if (url.startsWith("/train/") && payload.checkpoint_path) {
+        aplicarArtefatosTreinamento(payload);
+        if (url.startsWith("/treinar/") && payload.checkpoint_path) {
           setStatus("Ajuda ensinada e ligada ao simulador 3D.");
-          await autoPreviewTrainingArtifacts(payload);
+          await previsualizarArtefatosTreinamento(payload);
         }
       } catch (error) {
         setOutput({ error: error.message, endpoint: url });
@@ -2484,20 +2484,20 @@ input, select, textarea, button {
     });
 
     document.getElementById("preview-button").addEventListener("click", async () => {
-      const payload = formPayload("simulate-form", {
-        fixture_name: state.catalog?.defaults?.default_fixture || "apophis/apophis_fixture.json",
+      const payload = formPayload("simulacao-form", {
+        fixture_name: state.catalog?.defaults?.default_fixture || "apophis/cenario_apophis.json",
         steps: 180,
         dt_days: 1.0,
         checkpoint_path: null,
         scaler_path: null,
         ood_guard_path: null,
       });
-      await callApi("/simulate/trajectory", payload, document.getElementById("preview-button"));
+      await callApi("/simular/trajetoria", payload, document.getElementById("preview-button"));
     });
 
     document.getElementById("green-example-button").addEventListener("click", async () => {
-      const payload = applySimulationPreset(simulationDefaults());
-      await callApi("/simulate/trajectory", payload, document.getElementById("green-example-button"));
+      const payload = aplicarPredefinicaoSimulacao(padroesSimulacao());
+      await callApi("/simular/trajetoria", payload, document.getElementById("green-example-button"));
     });
 
     document.getElementById("red-example-button").addEventListener("click", () => {
@@ -2510,14 +2510,14 @@ input, select, textarea, button {
 
     document.getElementById("run-apophis-now-button").addEventListener("click", async () => {
       const payload = formPayload("apophis-form", {
-        fixture_name: state.catalog?.defaults?.default_fixture || "apophis/apophis_fixture.json",
+        fixture_name: state.catalog?.defaults?.default_fixture || "apophis/cenario_apophis.json",
         steps: 180,
         dt_days: 1.0,
         checkpoint_path: null,
         scaler_path: null,
         ood_guard_path: null,
       });
-      await callApi("/validate/apophis", payload, document.getElementById("run-apophis-now-button"));
+      await callApi("/validar/apophis", payload, document.getElementById("run-apophis-now-button"));
     });
 
     document.getElementById("quick-apophis-button").addEventListener("click", async () => {
@@ -2529,38 +2529,38 @@ input, select, textarea, button {
     });
 
     document.getElementById("sync-payload-button").addEventListener("click", () => {
-      updateSimulationPayloadEditor();
+      atualizarEditorPayloadSimulacao();
       setStatus("Dados por dentro atualizados a partir da aula.");
     });
 
     document.getElementById("run-payload-button").addEventListener("click", async () => {
-      const payload = readSimulationPayloadEditor();
+      const payload = lerEditorPayloadSimulacao();
       if (!payload) {
         return;
       }
-      await callApi("/simulate/trajectory", payload, document.getElementById("run-payload-button"));
+      await callApi("/simular/trajetoria", payload, document.getElementById("run-payload-button"));
     });
 
-    document.getElementById("simulate-form").addEventListener("input", (event) => {
-      if (event.target?.id === "simulation-payload-editor") {
+    document.getElementById("simulacao-form").addEventListener("input", (event) => {
+      if (event.target?.id === "editor-payload-simulacao") {
         return;
       }
-      updateSimulationPayloadEditor();
+      atualizarEditorPayloadSimulacao();
     });
 
-    document.getElementById("simulate-form").addEventListener("change", (event) => {
-      if (event.target?.id === "simulation-payload-editor") {
+    document.getElementById("simulacao-form").addEventListener("change", (event) => {
+      if (event.target?.id === "editor-payload-simulacao") {
         return;
       }
-      updateSimulationPayloadEditor();
+      atualizarEditorPayloadSimulacao();
     });
 
-    bindForm("generalist-form", "/generate/generalist");
-    bindForm("specialist-form", "/generate/specialist");
-    bindForm("train-generalist-form", "/train/generalist");
-    bindForm("train-specialist-form", "/train/specialist");
-    bindForm("simulate-form", "/simulate/trajectory");
-    bindForm("apophis-form", "/validate/apophis");
+    bindForm("generalista-form", "/gerar/generalista");
+    bindForm("especialista-form", "/gerar/especialista");
+    bindForm("treinar-generalista-form", "/treinar/generalista");
+    bindForm("treinar-especialista-form", "/treinar/especialista");
+    bindForm("simulacao-form", "/simular/trajetoria");
+    bindForm("apophis-form", "/validar/apophis");
 
     (async () => {
       try {
@@ -2569,7 +2569,7 @@ input, select, textarea, button {
         setOutput(catalog);
         setStatus("Aula pronta.");
         await callApi(
-          "/simulate/trajectory",
+          "/simular/trajetoria",
           {
             fixture_name: catalog.defaults.default_fixture,
             steps: 180,
@@ -2588,3 +2588,7 @@ input, select, textarea, button {
 </body>
 </html>
 """
+
+
+build_catalog_payload = montar_payload_catalogo
+render_dashboard_html = renderizar_html_painel

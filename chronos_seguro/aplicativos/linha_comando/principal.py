@@ -1,66 +1,71 @@
-"""Command line interface."""
+"""Interface de linha de comando."""
 
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
 
-from chronos_safe.config.settings import SETTINGS
-from chronos_safe.data.specialist_generator import SpecialistGenerationConfig, generate_specialist_dataset
-from chronos_safe.data.synthetic_generator import SyntheticGenerationConfig, generate_generalist_dataset
-from chronos_safe.runtime import ensure_runtime_directories
-from chronos_safe.services.simulation import SimulationConfig, run_fixture_rollout
-from chronos_safe.simulation.mission_apophis import ApophisValidationConfig, run_apophis_validation
-from chronos_safe.training.train_generalist import run_train_generalist
-from chronos_safe.training.train_specialist import run_train_specialist
-from chronos_safe.utils.serialization import write_json
+from chronos_seguro.configuracao.ajustes import SETTINGS
+from chronos_seguro.dados.gerador_especialista import ConfiguracaoGeracaoEspecialista, gerar_dataset_especialista
+from chronos_seguro.dados.gerador_sintetico import ConfiguracaoGeracaoSintetica, gerar_dataset_generalista
+from chronos_seguro.execucao import ensure_runtime_directories
+from chronos_seguro.servicos.simulacao import ConfiguracaoSimulacao, executar_propagacao_cenario
+from chronos_seguro.simulacao.missao_apophis import ConfiguracaoValidacaoApophis, executar_validacao_apophis
+from chronos_seguro.treinamento.treinar_generalista import executar_treino_generalista
+from chronos_seguro.treinamento.treinar_especialista import executar_treino_especialista
+from chronos_seguro.utilitarios.serializacao import write_json
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="chronos", description="CHRONOS-SAFE command line interface")
+    parser = argparse.ArgumentParser(prog="chronos", description="Interface de linha de comando do CHRONOS-SEGURO")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    gen_generalist = subparsers.add_parser("generate-generalist")
-    gen_generalist.add_argument("--output-dir", default=str(SETTINGS.data_root / "processed" / "generalist"))
-    gen_generalist.add_argument("--num-samples", type=int, default=128)
-    gen_generalist.add_argument("--min-bodies", type=int, default=2)
-    gen_generalist.add_argument("--max-bodies", type=int, default=6)
-    gen_generalist.add_argument("--dt-days", type=float, default=1.0)
+    gen_generalista = subparsers.add_parser("gerar-generalista")
+    gen_generalista.add_argument("--diretorio-saida", "--output-dir", dest="output_dir", default=str(SETTINGS.data_root / "processados" / "generalista"))
+    gen_generalista.add_argument("--num-amostras", "--num-samples", dest="num_samples", type=int, default=128)
+    gen_generalista.add_argument("--min-corpos", "--min-bodies", dest="min_bodies", type=int, default=2)
+    gen_generalista.add_argument("--max-corpos", "--max-bodies", dest="max_bodies", type=int, default=6)
+    gen_generalista.add_argument("--dt-dias", "--dt-days", dest="dt_days", type=float, default=1.0)
 
-    gen_specialist = subparsers.add_parser("generate-specialist")
-    gen_specialist.add_argument("--output-dir", default=str(SETTINGS.data_root / "processed" / "specialist"))
-    gen_specialist.add_argument("--fixture-name", default="apophis/apophis_fixture.json")
-    gen_specialist.add_argument("--num-samples", type=int, default=64)
-    gen_specialist.add_argument("--dt-days", type=float, default=1.0)
+    gen_especialista = subparsers.add_parser("gerar-especialista")
+    gen_especialista.add_argument("--diretorio-saida", "--output-dir", dest="output_dir", default=str(SETTINGS.data_root / "processados" / "especialista"))
+    gen_especialista.add_argument("--cenario", "--fixture-name", dest="fixture_name", default="apophis/cenario_apophis.json")
+    gen_especialista.add_argument("--num-amostras", "--num-samples", dest="num_samples", type=int, default=64)
+    gen_especialista.add_argument("--dt-dias", "--dt-days", dest="dt_days", type=float, default=1.0)
 
-    train_generalist = subparsers.add_parser("train-generalist")
-    train_generalist.add_argument("--dataset-dir", default=str(SETTINGS.data_root / "processed" / "generalist"))
-    train_generalist.add_argument("--output-dir", default=str(SETTINGS.models_root / "checkpoints" / "generalist"))
-    train_generalist.add_argument("--epochs", type=int, default=20)
-    train_generalist.add_argument("--batch-size", type=int, default=16)
+    train_generalista = subparsers.add_parser("treinar-generalista")
+    train_generalista.add_argument("--diretorio-dataset", "--dataset-dir", dest="dataset_dir", default=str(SETTINGS.data_root / "processados" / "generalista"))
+    train_generalista.add_argument("--diretorio-saida", "--output-dir", dest="output_dir", default=str(SETTINGS.models_root / "pontos_controle" / "generalista"))
+    train_generalista.add_argument("--epocas", "--epochs", dest="epochs", type=int, default=20)
+    train_generalista.add_argument("--tamanho-lote", "--batch-size", dest="batch_size", type=int, default=16)
 
-    train_specialist = subparsers.add_parser("train-specialist")
-    train_specialist.add_argument("--dataset-dir", default=str(SETTINGS.data_root / "processed" / "specialist"))
-    train_specialist.add_argument("--output-dir", default=str(SETTINGS.models_root / "checkpoints" / "specialist"))
-    train_specialist.add_argument("--base-checkpoint", default=None)
-    train_specialist.add_argument("--epochs", type=int, default=10)
-    train_specialist.add_argument("--batch-size", type=int, default=16)
+    train_especialista = subparsers.add_parser("treinar-especialista")
+    train_especialista.add_argument("--diretorio-dataset", "--dataset-dir", dest="dataset_dir", default=str(SETTINGS.data_root / "processados" / "especialista"))
+    train_especialista.add_argument("--diretorio-saida", "--output-dir", dest="output_dir", default=str(SETTINGS.models_root / "pontos_controle" / "especialista"))
+    train_especialista.add_argument("--ponto-controle-base", "--base-checkpoint", dest="base_checkpoint", default=None)
+    train_especialista.add_argument("--epocas", "--epochs", dest="epochs", type=int, default=10)
+    train_especialista.add_argument("--tamanho-lote", "--batch-size", dest="batch_size", type=int, default=16)
 
-    simulate = subparsers.add_parser("simulate")
-    simulate.add_argument("--fixture-name", default="apophis/apophis_fixture.json")
-    simulate.add_argument("--steps", type=int, default=30)
-    simulate.add_argument("--dt-days", type=float, default=1.0)
-    simulate.add_argument("--checkpoint-path", default=None)
-    simulate.add_argument("--scaler-path", default=None)
-    simulate.add_argument("--ood-guard-path", default=None)
-    simulate.add_argument("--output-path", default=str(SETTINGS.reports_root / "validation" / "simulation.json"))
+    simular_parser = subparsers.add_parser("simular")
+    simular_parser.add_argument("--cenario", "--fixture-name", dest="fixture_name", default="apophis/cenario_apophis.json")
+    simular_parser.add_argument("--passos", "--steps", dest="steps", type=int, default=30)
+    simular_parser.add_argument("--dt-dias", "--dt-days", dest="dt_days", type=float, default=1.0)
+    simular_parser.add_argument("--ponto-controle", "--checkpoint-path", dest="checkpoint_path", default=None)
+    simular_parser.add_argument("--escalonador", "--scaler-path", dest="scaler_path", default=None)
+    simular_parser.add_argument("--guarda-ood", "--ood-guard-path", dest="ood_guard_path", default=None)
+    simular_parser.add_argument(
+        "--saida",
+        "--output-path",
+        dest="output_path",
+        default=str(SETTINGS.reports_root / "validacao" / "simulacao.json"),
+    )
 
-    apophis = subparsers.add_parser("validate-apophis")
-    apophis.add_argument("--steps", type=int, default=180)
-    apophis.add_argument("--dt-days", type=float, default=1.0)
-    apophis.add_argument("--checkpoint-path", default=None)
-    apophis.add_argument("--scaler-path", default=None)
-    apophis.add_argument("--ood-guard-path", default=None)
+    apophis = subparsers.add_parser("validar-apophis")
+    apophis.add_argument("--passos", "--steps", dest="steps", type=int, default=180)
+    apophis.add_argument("--dt-dias", "--dt-days", dest="dt_days", type=float, default=1.0)
+    apophis.add_argument("--ponto-controle", "--checkpoint-path", dest="checkpoint_path", default=None)
+    apophis.add_argument("--escalonador", "--scaler-path", dest="scaler_path", default=None)
+    apophis.add_argument("--guarda-ood", "--ood-guard-path", dest="ood_guard_path", default=None)
     return parser
 
 
@@ -68,9 +73,9 @@ def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
     ensure_runtime_directories()
-    if args.command == "generate-generalist":
-        generate_generalist_dataset(
-            SyntheticGenerationConfig(
+    if args.command == "gerar-generalista":
+        gerar_dataset_generalista(
+            ConfiguracaoGeracaoSintetica(
                 output_dir=Path(args.output_dir),
                 num_samples=args.num_samples,
                 min_bodies=args.min_bodies,
@@ -79,9 +84,9 @@ def main() -> None:
             )
         )
         return
-    if args.command == "generate-specialist":
-        generate_specialist_dataset(
-            SpecialistGenerationConfig(
+    if args.command == "gerar-especialista":
+        gerar_dataset_especialista(
+            ConfiguracaoGeracaoEspecialista(
                 output_dir=Path(args.output_dir),
                 fixture_name=args.fixture_name,
                 num_samples=args.num_samples,
@@ -89,11 +94,11 @@ def main() -> None:
             )
         )
         return
-    if args.command == "train-generalist":
-        run_train_generalist(args.dataset_dir, args.output_dir, epochs=args.epochs, batch_size=args.batch_size)
+    if args.command == "treinar-generalista":
+        executar_treino_generalista(args.dataset_dir, args.output_dir, epochs=args.epochs, batch_size=args.batch_size)
         return
-    if args.command == "train-specialist":
-        run_train_specialist(
+    if args.command == "treinar-especialista":
+        executar_treino_especialista(
             args.dataset_dir,
             args.output_dir,
             base_checkpoint=args.base_checkpoint,
@@ -101,9 +106,9 @@ def main() -> None:
             batch_size=args.batch_size,
         )
         return
-    if args.command == "simulate":
-        result = run_fixture_rollout(
-            SimulationConfig(
+    if args.command == "simular":
+        result = executar_propagacao_cenario(
+            ConfiguracaoSimulacao(
                 fixture_name=args.fixture_name,
                 steps=args.steps,
                 dt_days=args.dt_days,
@@ -114,9 +119,9 @@ def main() -> None:
         )
         write_json(args.output_path, result.to_dict())
         return
-    if args.command == "validate-apophis":
-        run_apophis_validation(
-            ApophisValidationConfig(
+    if args.command == "validar-apophis":
+        executar_validacao_apophis(
+            ConfiguracaoValidacaoApophis(
                 steps=args.steps,
                 dt_days=args.dt_days,
                 checkpoint_path=None if args.checkpoint_path is None else Path(args.checkpoint_path),

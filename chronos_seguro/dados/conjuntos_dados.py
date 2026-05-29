@@ -1,4 +1,4 @@
-"""Dataset loading utilities."""
+"""Utilitarios de carregamento de conjuntos de dados."""
 
 from __future__ import annotations
 
@@ -8,8 +8,8 @@ from typing import Any
 
 import numpy as np
 
-from chronos_safe.data.cache import load_manifest, load_npz_bundle
-from chronos_safe.data.scalers import PhysicalScaler
+from chronos_seguro.dados.cache import load_manifest, load_npz_bundle
+from chronos_seguro.dados.escalonadores import PhysicalScaler
 
 try:
     import torch
@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover - optional dependency
     torch = None
 
     class Dataset:  # type: ignore[override]
-        """Fallback protocol-like dataset."""
+        """Substituto minimo para manter o protocolo de dataset."""
 
         pass
 

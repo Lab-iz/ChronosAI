@@ -1,4 +1,4 @@
-"""Hybrid simulation engine."""
+"""Motor de simulacao hibrida."""
 
 from __future__ import annotations
 
@@ -7,14 +7,14 @@ from pathlib import Path
 
 import numpy as np
 
-from chronos_safe.data.scalers import PhysicalScaler
-from chronos_safe.domain.results import FallbackEvent
-from chronos_safe.domain.state import SystemState
-from chronos_safe.models.ood_guard import OODGuard
-from chronos_safe.physics.quick_integrator import QuickIntegrator
-from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
-from chronos_safe.simulation.safe_switch import evaluate_state_safety
-from chronos_safe.utils.device import get_device
+from chronos_seguro.dados.escalonadores import PhysicalScaler
+from chronos_seguro.dominio.resultados import FallbackEvent
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.modelos.guarda_ood import OODGuard
+from chronos_seguro.fisica.integrador_rapido import QuickIntegrator
+from chronos_seguro.fisica.motor_rebound import ReboundReferenceEngine
+from chronos_seguro.simulacao.chave_segura import evaluate_state_safety
+from chronos_seguro.utilitarios.dispositivo import get_device
 
 try:
     import torch
@@ -118,8 +118,8 @@ class HybridEngine:
 
 def load_torch_model(checkpoint_path: str | Path, device: str = "cpu") -> object:
     if torch is None:  # pragma: no cover
-        raise RuntimeError("PyTorch is required to load a trained model.")
-    from chronos_safe.models.residual_gnn import ResidualGNN, ResidualGNNConfig
+        raise RuntimeError("PyTorch e necessario para carregar um modelo treinado.")
+    from chronos_seguro.modelos.gnn_residual import ResidualGNN, ResidualGNNConfig
 
     resolved_device = get_device(device)
     model = ResidualGNN(ResidualGNNConfig()).to(resolved_device)

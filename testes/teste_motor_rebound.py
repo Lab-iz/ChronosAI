@@ -1,11 +1,11 @@
 import numpy as np
 
-from chronos_safe.domain.state import BodyState, SystemState
-from chronos_safe.physics.frames import standardize_state
-from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
+from chronos_seguro.dominio.estado import BodyState, SystemState
+from chronos_seguro.fisica.referenciais import standardize_state
+from chronos_seguro.fisica.motor_rebound import ReboundReferenceEngine
 
 
-def test_reference_engine_two_body_step_is_finite() -> None:
+def test_motor_referencia_passo_dois_corpos_e_finito() -> None:
     state = standardize_state(
         SystemState.from_bodies(
             [

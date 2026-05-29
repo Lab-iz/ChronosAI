@@ -1,4 +1,4 @@
-"""Uncertainty helpers."""
+"""Utilitarios de incerteza."""
 
 from __future__ import annotations
 

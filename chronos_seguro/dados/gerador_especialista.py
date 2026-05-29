@@ -1,4 +1,4 @@
-"""Specialist Solar System and Apophis data generation."""
+"""Geracao especialista de dados do Sistema Solar e de Apophis."""
 
 from __future__ import annotations
 
@@ -7,23 +7,23 @@ from pathlib import Path
 
 import numpy as np
 
-from chronos_safe.config.constants import DEFAULT_MAX_BODIES
-from chronos_safe.config.settings import SETTINGS
-from chronos_safe.data.cache import save_manifest, save_npz_bundle
-from chronos_safe.data.horizons_client import HorizonsClient
-from chronos_safe.data.preprocess import build_processed_sample
-from chronos_safe.data.scalers import PhysicalScaler
-from chronos_safe.domain.state import SystemState
-from chronos_safe.physics.frames import standardize_state
-from chronos_safe.physics.quick_integrator import QuickIntegrator
-from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
-from chronos_safe.utils.seed import set_seed
+from chronos_seguro.configuracao.constantes import DEFAULT_MAX_BODIES
+from chronos_seguro.configuracao.ajustes import SETTINGS
+from chronos_seguro.dados.cache import save_manifest, save_npz_bundle
+from chronos_seguro.dados.cliente_horizons import HorizonsClient
+from chronos_seguro.dados.preprocessamento import construir_amostra_processada
+from chronos_seguro.dados.escalonadores import PhysicalScaler
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.fisica.referenciais import standardize_state
+from chronos_seguro.fisica.integrador_rapido import QuickIntegrator
+from chronos_seguro.fisica.motor_rebound import ReboundReferenceEngine
+from chronos_seguro.utilitarios.semente import set_seed
 
 
 @dataclass(slots=True)
-class SpecialistGenerationConfig:
+class ConfiguracaoGeracaoEspecialista:
     output_dir: Path
-    fixture_name: str = "apophis/apophis_fixture.json"
+    fixture_name: str = "apophis/cenario_apophis.json"
     num_samples: int = 64
     dt_days: float = 1.0
     position_noise_std: float = 1.0e-4
@@ -32,7 +32,7 @@ class SpecialistGenerationConfig:
     max_padded_bodies: int = DEFAULT_MAX_BODIES
 
 
-def _perturb_state(
+def _perturbar_estado(
     rng: np.random.Generator,
     base_state: SystemState,
     position_noise_std: float,
@@ -44,7 +44,7 @@ def _perturb_state(
     return standardize_state(state)
 
 
-def generate_specialist_dataset(config: SpecialistGenerationConfig) -> Path:
+def gerar_dataset_especialista(config: ConfiguracaoGeracaoEspecialista) -> Path:
     set_seed(config.seed)
     rng = np.random.default_rng(config.seed)
     client = HorizonsClient()
@@ -53,11 +53,11 @@ def generate_specialist_dataset(config: SpecialistGenerationConfig) -> Path:
     reference = ReboundReferenceEngine(dt_days=config.dt_days, use_rebound=SETTINGS.use_rebound_if_available)
     samples = []
     for _ in range(config.num_samples):
-        initial_state = _perturb_state(rng, base_state, config.position_noise_std, config.velocity_noise_std)
+        initial_state = _perturbar_estado(rng, base_state, config.position_noise_std, config.velocity_noise_std)
         teacher_next = reference.step(initial_state)
         quick_next = quick.step(initial_state)
         samples.append(
-            build_processed_sample(
+            construir_amostra_processada(
                 initial_state=initial_state,
                 teacher_next=teacher_next,
                 quick_next=quick_next,
@@ -87,7 +87,7 @@ def generate_specialist_dataset(config: SpecialistGenerationConfig) -> Path:
     save_manifest(
         config.output_dir / "manifest.json",
         {
-            "kind": "specialist",
+            "kind": "especialista",
             "fixture_name": config.fixture_name,
             "num_samples": config.num_samples,
             "dt_days": config.dt_days,
@@ -96,3 +96,7 @@ def generate_specialist_dataset(config: SpecialistGenerationConfig) -> Path:
         },
     )
     return config.output_dir
+
+
+EspecialistaGenerationConfig = ConfiguracaoGeracaoEspecialista
+generate_especialista_dataset = gerar_dataset_especialista

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from chronos_safe.utils.serialization import read_json, write_json
+from chronos_seguro.utilitarios.serializacao import read_json, write_json
 
 
 def _safe_scale(value: float, minimum: float = 1.0e-8) -> float:

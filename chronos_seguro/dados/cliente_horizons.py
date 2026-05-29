@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from chronos_safe.config.settings import SETTINGS
-from chronos_safe.domain.state import SystemState
-from chronos_safe.utils.serialization import read_json
+from chronos_seguro.configuracao.ajustes import SETTINGS
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.utilitarios.serializacao import read_json
 
 try:
     from astroquery.jplhorizons import Horizons  # type: ignore
@@ -15,11 +15,11 @@ except ImportError:  # pragma: no cover - optional dependency
 
 
 class HorizonsClient:
-    def __init__(self, fixtures_root: Path | None = None) -> None:
-        self.fixtures_root = fixtures_root or (SETTINGS.data_root / "fixtures")
+    def __init__(self, cenarios_root: Path | None = None) -> None:
+        self.cenarios_root = cenarios_root or (SETTINGS.data_root / "cenarios")
 
     def load_fixture(self, name: str) -> SystemState:
-        fixture_path = self.fixtures_root / name
+        fixture_path = self.cenarios_root / name
         payload = read_json(fixture_path)
         return SystemState.from_dict(payload)
 
@@ -30,7 +30,7 @@ class HorizonsClient:
         online: bool = False,
     ) -> SystemState:
         if not online or Horizons is None:
-            return self.load_fixture("solar_system/simplified_solar_system.json")
+            return self.load_fixture("sistema_solar/sistema_solar_simplificado.json")
 
         bodies = []
         for body_name in body_names:

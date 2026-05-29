@@ -1,1 +1,1 @@
-"""Simulation package."""
+"""Pacote de simulacao."""

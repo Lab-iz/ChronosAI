@@ -1,59 +1,59 @@
 # Deploy no Render
 
-Este projeto foi preparado para ficar simples de avaliar no Render.
+Este projeto foi preparado para ser avaliado no Render como uma aplicacao web unica, sem build frontend separado.
 
 ## Objetivo
 
-Subir o CHRONOS-SAFE como uma aplicacao web unica, sem build frontend separado.
+Subir o CHRONOS-SEGURO a partir da raiz do repositorio, usando o pacote `chronos_seguro`, a API FastAPI e a interface web integrada.
 
 ## O que ja esta pronto
 
 O repositorio possui:
 
-- [`render.yaml`](../../render.yaml)
+- [`render.yaml`](../render.yaml)
+- [`.python-version`](../.python-version)
 
-Ele configura:
+O `render.yaml` configura:
 
-- `rootDir: chronos_safe`
+- `rootDir: .`
 - instalacao com `python -m pip install -e .`
 - servidor com `uvicorn`
 - `healthCheckPath: /health`
 - navegador desativado em producao
 - modo CPU
 - `REBOUND` desativado por padrao no deploy web
+- Python `3.12.8`
 
-Esse perfil de deploy foi otimizado para:
+Esse perfil foi otimizado para:
 
 - subir mais rapido;
 - falhar menos no build;
-- entregar a demo 3D e a validacao Apophis sem depender de `torch` ou `rebound`;
+- entregar a demo 3D e a validacao Apophis sem exigir treino pesado;
 - manter a interface compreensivel para avaliacao.
 
 ## Antes de subir
 
-Checklist rapido:
+Lista rapida:
 
-1. confirme que o repositorio esta atualizado no GitHub;
-2. confirme que o arquivo [`render.yaml`](../../render.yaml) esta no diretorio raiz do repositorio;
-3. se quiser favicon, coloque `chronosfav.png` em `chronos_safe/chronos_safe/apps/api/static/`;
-4. confirme que a interface local abre com `python run.py`.
+1. Confirme que o repositorio esta atualizado no GitHub.
+2. Confirme que [`render.yaml`](../render.yaml) esta na raiz do repositorio.
+3. Confirme que [`.python-version`](../.python-version) tambem esta na raiz.
+4. Confirme que a interface local abre com `python run.py`.
 
-## Passo a passo no Render
-
-### Opcao recomendada: Blueprint via `render.yaml`
+## Opcao recomendada: Blueprint
 
 1. Suba o repositorio no GitHub.
 2. Entre em `https://render.com/`.
 3. Clique em `New +`.
 4. Clique em `Blueprint`.
 5. Conecte sua conta do GitHub ao Render, se ainda nao estiver conectada.
-6. Selecione o repositorio do CHRONOS-SAFE.
-7. O Render vai detectar o arquivo `render.yaml`.
+6. Selecione o repositorio do CHRONOS-SEGURO.
+7. O Render deve detectar o arquivo `render.yaml`.
 8. Confirme a criacao do servico.
 9. Aguarde o build e o primeiro deploy.
 10. Abra a URL publica gerada pelo Render.
 
-### Opcao manual: criar Web Service sem Blueprint
+## Opcao manual: Web Service
 
 Se quiser configurar manualmente no painel:
 
@@ -62,11 +62,11 @@ Se quiser configurar manualmente no painel:
 3. Selecione o repositorio.
 4. Preencha:
 
-- `Name`: `chronos-safe`
-- `Root Directory`: `chronos_safe`
+- `Name`: `chronos-seguro`
+- `Root Directory`: deixe vazio ou use `.`
 - `Runtime`: `Python 3`
 - `Build Command`: `python -m pip install -e .`
-- `Start Command`: `python -m uvicorn chronos_safe.apps.api.main:app --host 0.0.0.0 --port $PORT`
+- `Start Command`: `python -m uvicorn chronos_seguro.aplicativos.api.principal:app --host 0.0.0.0 --port $PORT`
 
 5. Adicione estas variaveis de ambiente:
 
@@ -84,12 +84,7 @@ Se quiser configurar manualmente no painel:
 
 7. Crie o servico e aguarde o deploy.
 
-Observacao:
-
-- o repositorio agora tambem inclui `.python-version` dentro de `chronos_safe/`;
-- isso ajuda o Render a usar `3.12.8` mesmo quando o servico e criado manualmente.
-
-## O que o avaliador deve fazer ao abrir
+## O que o avaliador deve fazer
 
 1. Clicar em `1. Ver demo 3D`.
 2. Observar a orbita 3D.
@@ -98,13 +93,11 @@ Observacao:
 
 ## Por que isso funciona bem para avaliacao
 
-O deploy foi pensado para uma pessoa leiga conseguir usar sem treinamento previo.
+O deploy foi pensado para uma pessoa leiga conseguir usar sem treinamento previo. A interface destaca:
 
-Na pratica, a interface deixa escondido o modo avancado e destaca apenas:
-
-- a visualizacao 3D;
-- o caso Apophis;
-- o resumo interpretado das metricas.
+- visualizacao 3D;
+- caso Apophis;
+- resumo interpretado das metricas.
 
 Assim, o avaliador entende rapidamente:
 
@@ -124,58 +117,52 @@ Fica pronto para uso:
 - simulacao com fallback;
 - relatorio guiado.
 
-Pode ficar indisponivel ou limitado no deploy web padrao:
+Pode ficar indisponivel ou limitado:
 
 - treino de modelos;
-- carregamento de checkpoints PyTorch;
+- carregamento de pontos de controle PyTorch muito grandes;
 - uso de `REBOUND` compilado no servidor.
 
 Isso e intencional. O deploy publico foi otimizado para avaliacao, nao para treino pesado.
 
-## Persistencia de arquivos no Render
+## Persistencia de arquivos
 
 Por padrao, trate o filesystem do Web Service como temporario.
 
-Isso significa que arquivos gerados em runtime, como:
+Arquivos gerados em runtime, como:
 
 - relatorios;
-- datasets;
-- checkpoints;
+- conjuntos de dados;
+- pontos de controle;
 - caches;
 
 podem nao sobreviver a novo deploy, restart ou troca de instancia.
 
-Para demonstracao publica, isso nao e um problema.
-Para uso persistente, o recomendado e:
+Para demonstracao publica, isso nao e um problema. Para uso persistente, use disco persistente no Render ou armazene artefatos fora do servico web.
 
-- anexar um disco persistente, se seu plano suportar;
-- ou armazenar artefatos fora do servico web.
-
-## Como validar se o deploy deu certo
+## Validacao pos-deploy
 
 Assim que o Render subir a aplicacao:
 
-1. abra `/health` e confirme que a resposta esta `ok`;
-2. abra `/`;
-3. clique em `1. Ver demo 3D`;
-4. confirme que o grafico 3D aparece;
-5. clique em `2. Rodar teste Apophis`;
-6. confirme que o `Relatorio guiado` aparece com metricas e semaforo.
+1. Abra `/health` e confirme que a resposta esta `ok`.
+2. Abra `/`.
+3. Clique em `1. Ver demo 3D`.
+4. Confirme que o grafico 3D aparece.
+5. Clique em `2. Rodar teste Apophis`.
+6. Confirme que o `Relatorio guiado` aparece com metricas e semaforo.
 
-## Quando fizer uma nova versao
+## Nova versao
 
 Fluxo recomendado:
 
-1. commit local;
-2. push para o GitHub;
-3. aguardar auto deploy do Render;
-4. abrir a URL publica;
-5. validar `demo 3D + Apophis`.
+1. Fazer commit local.
+2. Fazer push para o GitHub.
+3. Aguardar o auto deploy do Render.
+4. Abrir a URL publica.
+5. Validar `demo 3D + Apophis`.
 
 ## Observacao sobre REBOUND
 
 O deploy padrao nao depende de `rebound` para funcionar.
 
-Se o ambiente conseguir instalar `rebound`, o sistema usa o baseline fisico oficial automaticamente.
-
-Se nao conseguir, o backend continua operando com o motor de referencia em NumPy, o que permite demonstracao e avaliacao funcional.
+Se o ambiente conseguir instalar `rebound`, o sistema usa o baseline fisico oficial automaticamente. Se nao conseguir, o backend continua operando com o motor de referencia em NumPy, permitindo demonstracao e avaliacao funcional.

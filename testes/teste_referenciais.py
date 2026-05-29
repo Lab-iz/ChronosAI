@@ -1,10 +1,10 @@
 import numpy as np
 
-from chronos_safe.domain.state import BodyState, SystemState
-from chronos_safe.physics.frames import center_of_mass, center_of_mass_velocity, standardize_state
+from chronos_seguro.dominio.estado import BodyState, SystemState
+from chronos_seguro.fisica.referenciais import center_of_mass, center_of_mass_velocity, standardize_state
 
 
-def test_standardize_state_moves_barycenter_to_zero() -> None:
+def test_padronizacao_move_baricentro_para_zero() -> None:
     state = SystemState.from_bodies(
         [
             BodyState("sun", 1.0, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]),

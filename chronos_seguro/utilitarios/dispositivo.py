@@ -1,4 +1,4 @@
-"""Device helpers."""
+"""Utilitarios de dispositivo."""
 
 from __future__ import annotations
 

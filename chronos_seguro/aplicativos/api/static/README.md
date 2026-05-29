@@ -1,4 +1,4 @@
-# Static Assets
+# Ativos Estaticos
 
 Coloque o favicon da aplicacao nesta pasta com este nome exato:
 
@@ -9,10 +9,10 @@ chronosfav.png
 Caminho esperado:
 
 ```text
-chronos_safe/chronos_safe/apps/api/static/chronosfav.png
+chronos_seguro/aplicativos/api/static/chronosfav.png
 ```
 
-Quando o arquivo existir, a interface web passara a usa-lo automaticamente em:
+Quando o arquivo existir, a interface web passa a usa-lo automaticamente em:
 
 ```text
 /static/chronosfav.png

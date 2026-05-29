@@ -1,14 +1,14 @@
-"""Rollout orchestration."""
+"""Orquestracao de propagacao."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from chronos_safe.domain.results import SimulationResult
-from chronos_safe.domain.state import SystemState
-from chronos_safe.evaluation.metrics import rollout_metrics
-from chronos_safe.physics.invariants import angular_momentum, total_energy
-from chronos_safe.simulation.hybrid_engine import HybridEngine
+from chronos_seguro.dominio.resultados import SimulationResult
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.avaliacao.metricas import rollout_metrics
+from chronos_seguro.fisica.invariantes import angular_momentum, total_energy
+from chronos_seguro.simulacao.motor_hibrido import HybridEngine
 
 
 @dataclass(slots=True)

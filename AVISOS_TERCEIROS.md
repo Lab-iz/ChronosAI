@@ -1,6 +1,6 @@
-# THIRD PARTY NOTICES
+# Avisos de Terceiros
 
-CHRONOS-SAFE is designed to interoperate with the following third-party libraries:
+O CHRONOS-SEGURO foi desenhado para interoperar com as seguintes bibliotecas de terceiros:
 
 - NumPy
 - PyTorch
@@ -15,4 +15,4 @@ CHRONOS-SAFE is designed to interoperate with the following third-party librarie
 - scikit-learn
 - pytest
 
-Each dependency remains subject to its own license.
+Cada dependencia continua sujeita a sua propria licenca.

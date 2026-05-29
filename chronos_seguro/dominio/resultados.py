@@ -1,11 +1,11 @@
-"""Simulation and evaluation results."""
+"""Resultados de simulacao e avaliacao."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from chronos_safe.domain.state import SystemState
-from chronos_safe.domain.types import JsonDict
+from chronos_seguro.dominio.estado import SystemState
+from chronos_seguro.dominio.tipos import JsonDict
 
 
 @dataclass(slots=True)

@@ -15,6 +15,6 @@
   ],
   "metadata": {
     "source": "offline_fixture",
-    "description": "Simplified barycentric-like Solar System snapshot for offline tests."
+    "description": "Retrato simplificado, aproximadamente baricentrico, do Sistema Solar para testes offline."
   }
 }
