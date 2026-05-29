@@ -87,7 +87,7 @@ O CHRONOS-SAFE pode ser usado de tres formas principais, dependendo do objetivo.
    finalidade: entender rapidamente o projeto.
 
    passos:
-   - rodar `python run.py`;
+   - na raiz do repositorio, rodar `python run.py`;
    - abrir `http://127.0.0.1:8000/`;
    - clicar em `1. Ver demo 3D`;
    - clicar em `2. Rodar teste Apophis`;
@@ -199,6 +199,7 @@ Se voce nao sabe nada de fisica orbital, use este fluxo:
 1. Rode a interface web:
 
 ```powershell
+cd ..
 python run.py
 ```
 
@@ -532,8 +533,8 @@ O frontend ja esta preparado para servi-lo automaticamente em `/static/chronosfa
 
 O projeto possui configuracao pronta para deploy:
 
-- [render.yaml](/c:/Users/0100cit9207/Downloads/Chronos-simulator/render.yaml)
-- [render_deploy.md](/c:/Users/0100cit9207/Downloads/Chronos-simulator/chronos_safe/docs/render_deploy.md)
+- [render.yaml](../render.yaml)
+- [render_deploy.md](docs/render_deploy.md)
 
 ### Resumo rapido
 
@@ -555,7 +556,7 @@ O deploy publico foi otimizado para:
 6. Acessar a URL publica.
 7. Rodar `1. Ver demo 3D` e depois `2. Rodar teste Apophis`.
 
-Se quiser o passo a passo completo dentro do painel do Render, leia [render_deploy.md](/c:/Users/0100cit9207/Downloads/Chronos-simulator/chronos_safe/docs/render_deploy.md).
+Se quiser o passo a passo completo dentro do painel do Render, leia [render_deploy.md](docs/render_deploy.md).
 
 Importante: o deploy web do Render deve ser tratado como ambiente de demonstracao. Arquivos gerados em runtime podem nao persistir entre deploys e restarts.
 
@@ -586,6 +587,7 @@ Se `rebound` falhar no Windows, o sistema continua funcional com backend de refe
 ## Execucao Rapida
 
 ```powershell
+cd ..
 python run.py
 ```
 
@@ -645,11 +647,11 @@ Cobertura minima atual:
 
 ## Documentacao Complementar
 
-- [Como rodar](/c:/Users/0100cit9207/Downloads/Chronos-simulator/chronos_safe/docs/como_rodar.md)
-- [Deploy no Render](/c:/Users/0100cit9207/Downloads/Chronos-simulator/chronos_safe/docs/render_deploy.md)
-- [Arquitetura](/c:/Users/0100cit9207/Downloads/Chronos-simulator/chronos_safe/docs/architecture.md)
-- [Metodologia](/c:/Users/0100cit9207/Downloads/Chronos-simulator/chronos_safe/docs/methodology.md)
-- [Protocolo Apophis](/c:/Users/0100cit9207/Downloads/Chronos-simulator/chronos_safe/docs/apophis_protocol.md)
+- [Como rodar](docs/como_rodar.md)
+- [Deploy no Render](docs/render_deploy.md)
+- [Arquitetura](docs/architecture.md)
+- [Metodologia](docs/methodology.md)
+- [Protocolo Apophis](docs/apophis_protocol.md)
 
 ## Resumo Final
 

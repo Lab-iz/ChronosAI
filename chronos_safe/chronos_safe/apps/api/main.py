@@ -15,48 +15,38 @@ from chronos_safe.apps.api.routes_training import router as training_router
 from chronos_safe.apps.api.schemas import HealthResponse
 from chronos_safe.apps.api.web_ui import build_catalog_payload, render_dashboard_html
 from chronos_safe.config.settings import SETTINGS
+from chronos_safe.runtime import ensure_runtime_directories
+from chronos_safe.utils.logging_utils import configure_logging
 from chronos_safe.version import __version__
 
 STATIC_DIR = Path(__file__).with_name("static")
-STATIC_DIR.mkdir(parents=True, exist_ok=True)
-
-
-def _ensure_runtime_directories() -> None:
-    for path in (
-        SETTINGS.data_root,
-        SETTINGS.data_root / "raw",
-        SETTINGS.data_root / "processed",
-        SETTINGS.data_root / "cache",
-        SETTINGS.data_root / "fixtures",
-        SETTINGS.models_root,
-        SETTINGS.models_root / "checkpoints",
-        SETTINGS.models_root / "scalers",
-        SETTINGS.reports_root,
-        SETTINGS.reports_root / "figures",
-        SETTINGS.reports_root / "benchmarks",
-        SETTINGS.reports_root / "validation",
-    ):
-        path.mkdir(parents=True, exist_ok=True)
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    _ensure_runtime_directories()
+    configure_logging(SETTINGS.log_level)
+    ensure_runtime_directories()
     yield
 
-app = FastAPI(
-    title="CHRONOS-SAFE",
-    version=__version__,
-    description=(
-        "Plataforma educacional para aprender a passagem segura de Apophis em 2029 "
-        "e visualizar simulacoes de muitos corpos em 3D."
-    ),
-    lifespan=lifespan,
-)
-app.include_router(data_router)
-app.include_router(training_router)
-app.include_router(simulation_router)
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+def create_app() -> FastAPI:
+    app = FastAPI(
+        title="CHRONOS-SAFE",
+        version=__version__,
+        description=(
+            "Plataforma educacional para aprender a passagem segura de Apophis em 2029 "
+            "e visualizar simulacoes de muitos corpos em 3D."
+        ),
+        lifespan=lifespan,
+    )
+    app.include_router(data_router)
+    app.include_router(training_router)
+    app.include_router(simulation_router)
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+    return app
+
+
+app = create_app()
 
 
 @app.get("/", response_class=HTMLResponse)

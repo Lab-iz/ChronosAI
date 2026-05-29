@@ -8,16 +8,11 @@ from pathlib import Path
 from chronos_safe.config.settings import SETTINGS
 from chronos_safe.data.specialist_generator import SpecialistGenerationConfig, generate_specialist_dataset
 from chronos_safe.data.synthetic_generator import SyntheticGenerationConfig, generate_generalist_dataset
-from chronos_safe.data.horizons_client import HorizonsClient
-from chronos_safe.physics.quick_integrator import QuickIntegrator
-from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
-from chronos_safe.simulation.hybrid_engine import HybridEngine, load_torch_model
+from chronos_safe.runtime import ensure_runtime_directories
+from chronos_safe.services.simulation import SimulationConfig, run_fixture_rollout
 from chronos_safe.simulation.mission_apophis import ApophisValidationConfig, run_apophis_validation
-from chronos_safe.simulation.rollout import RolloutConfig, run_hybrid_rollout
 from chronos_safe.training.train_generalist import run_train_generalist
 from chronos_safe.training.train_specialist import run_train_specialist
-from chronos_safe.data.scalers import PhysicalScaler
-from chronos_safe.models.ood_guard import OODGuard
 from chronos_safe.utils.serialization import write_json
 
 
@@ -72,6 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+    ensure_runtime_directories()
     if args.command == "generate-generalist":
         generate_generalist_dataset(
             SyntheticGenerationConfig(
@@ -106,19 +102,16 @@ def main() -> None:
         )
         return
     if args.command == "simulate":
-        client = HorizonsClient()
-        initial_state = client.load_fixture(args.fixture_name)
-        model = load_torch_model(args.checkpoint_path) if args.checkpoint_path else None
-        scaler = PhysicalScaler.load(args.scaler_path) if args.scaler_path else None
-        ood_guard = OODGuard.load(args.ood_guard_path) if args.ood_guard_path else None
-        engine = HybridEngine(
-            quick_integrator=QuickIntegrator(dt_days=args.dt_days),
-            reference_engine=ReboundReferenceEngine(dt_days=args.dt_days, use_rebound=SETTINGS.use_rebound_if_available),
-            model=model,
-            scaler=scaler,
-            ood_guard=ood_guard,
+        result = run_fixture_rollout(
+            SimulationConfig(
+                fixture_name=args.fixture_name,
+                steps=args.steps,
+                dt_days=args.dt_days,
+                checkpoint_path=args.checkpoint_path,
+                scaler_path=args.scaler_path,
+                ood_guard_path=args.ood_guard_path,
+            )
         )
-        result = run_hybrid_rollout(initial_state, engine, RolloutConfig(steps=args.steps, dt_days=args.dt_days))
         write_json(args.output_path, result.to_dict())
         return
     if args.command == "validate-apophis":

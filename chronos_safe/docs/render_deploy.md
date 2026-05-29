@@ -10,7 +10,7 @@ Subir o CHRONOS-SAFE como uma aplicacao web unica, sem build frontend separado.
 
 O repositorio possui:
 
-- [render.yaml](/c:/Users/0100cit9207/Downloads/Chronos-simulator/render.yaml)
+- [`render.yaml`](../../render.yaml)
 
 Ele configura:
 
@@ -34,7 +34,7 @@ Esse perfil de deploy foi otimizado para:
 Checklist rapido:
 
 1. confirme que o repositorio esta atualizado no GitHub;
-2. confirme que o arquivo [render.yaml](/c:/Users/0100cit9207/Downloads/Chronos-simulator/render.yaml) esta no diretorio raiz do repositorio;
+2. confirme que o arquivo [`render.yaml`](../../render.yaml) esta no diretorio raiz do repositorio;
 3. se quiser favicon, coloque `chronosfav.png` em `chronos_safe/chronos_safe/apps/api/static/`;
 4. confirme que a interface local abre com `python run.py`.
 
@@ -47,7 +47,7 @@ Checklist rapido:
 3. Clique em `New +`.
 4. Clique em `Blueprint`.
 5. Conecte sua conta do GitHub ao Render, se ainda nao estiver conectada.
-6. Selecione o repositorio `Chronos-simulator`.
+6. Selecione o repositorio do CHRONOS-SAFE.
 7. O Render vai detectar o arquivo `render.yaml`.
 8. Confirme a criacao do servico.
 9. Aguarde o build e o primeiro deploy.

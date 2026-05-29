@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import numpy as np
 
@@ -55,7 +56,7 @@ class OODGuard:
     def is_safe(self, score: float) -> bool:
         return score <= self.threshold
 
-    def save(self, path: str) -> None:
+    def save(self, path: str | Path) -> None:
         payload = {
             "centroid": None if self.centroid is None else self.centroid.tolist(),
             "variance": None if self.variance is None else self.variance.tolist(),
@@ -65,7 +66,7 @@ class OODGuard:
         write_json(path, payload)
 
     @classmethod
-    def load(cls, path: str) -> "OODGuard":
+    def load(cls, path: str | Path) -> "OODGuard":
         payload = read_json(path)
         return cls(
             centroid=None if payload["centroid"] is None else np.asarray(payload["centroid"], dtype=np.float64),

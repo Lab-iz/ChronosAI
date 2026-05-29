@@ -4,19 +4,19 @@ Este guia mostra o passo a passo para instalar e executar o projeto localmente.
 
 Se voce nao quer estudar fisica orbital nem treinar modelos agora, siga apenas a secao `Rota rapida para avaliacao`.
 
-Todos os comandos de instalacao abaixo assumem que voce esta dentro da pasta:
+Os comandos de instalacao abaixo assumem que voce esta dentro da pasta do pacote:
 
 ```text
-C:\Users\0100cit9207\Downloads\Chronos-simulator\chronos_safe
+<repositorio>\chronos_safe
 ```
 
-Se voce estiver um nivel acima, em:
+O launcher web fica somente na raiz do repositorio:
 
 ```text
-C:\Users\0100cit9207\Downloads\Chronos-simulator
+<repositorio>\run.py
 ```
 
-entre primeiro na pasta correta:
+Para instalar e usar a CLI, entre no pacote:
 
 ```powershell
 cd chronos_safe
@@ -27,7 +27,7 @@ cd chronos_safe
 Abra o terminal na raiz do projeto:
 
 ```powershell
-cd C:\Users\0100cit9207\Downloads\Chronos-simulator\chronos_safe
+cd <repositorio>\chronos_safe
 ```
 
 ## Rota rapida para avaliacao
@@ -43,6 +43,7 @@ python -m pip install -e ".[ml,science,dev]"
 2. Rode a interface:
 
 ```powershell
+cd ..
 python run.py
 ```
 
@@ -59,7 +60,7 @@ http://127.0.0.1:8000/
 
 5. Leia o painel `Relatorio guiado`.
 
-Se o objetivo for deploy no Render, leia tambem [docs/render_deploy.md](/c:/Users/0100cit9207/Downloads/Chronos-simulator/chronos_safe/docs/render_deploy.md).
+Se o objetivo for deploy no Render, leia tambem [docs/render_deploy.md](render_deploy.md).
 
 ## 2. Criar um ambiente virtual
 
@@ -72,7 +73,7 @@ py -3.12 -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-Se voce so tiver Python `3.13`, o projeto ainda pode rodar parcialmente, mas a stack cientifica completa pode exigir ajustes extras.
+Se voce so tiver Python `3.13` ou `3.14`, use um ambiente `3.11` ou `3.12` para a stack completa declarada no `pyproject.toml`.
 
 ## 3. Atualizar o pip
 
@@ -243,6 +244,7 @@ Relatorios gerados:
 Forma mais simples:
 
 ```powershell
+cd ..
 python run.py
 ```
 
@@ -252,13 +254,13 @@ Endereco padrao:
 http://127.0.0.1:8000/
 ```
 
-Se voce estiver na pasta externa `Chronos-simulator`, tambem pode usar:
+Se voce ja estiver na raiz do repositorio, use diretamente:
 
 ```powershell
 python run.py
 ```
 
-Nesse caso, o launcher externo encaminha automaticamente para `chronos_safe\run.py`.
+O projeto mantem apenas esse launcher para evitar entradas duplicadas.
 
 Se quiser subir sem abrir o navegador:
 

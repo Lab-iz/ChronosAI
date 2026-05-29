@@ -1,6 +1,6 @@
 {
-  "dataset_dir": "C:\\Users\\0100cit9207\\Downloads\\Chronos-simulator\\chronos_safe\\data\\processed\\specialist",
-  "output_dir": "C:\\Users\\0100cit9207\\Downloads\\Chronos-simulator\\chronos_safe\\models\\checkpoints\\specialist",
+  "dataset_dir": "data/processed/specialist",
+  "output_dir": "models/checkpoints/specialist",
   "epochs_requested": 6,
   "best_epoch": 2,
   "best_val_loss": 6.572017083921924e+27,

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 
@@ -58,10 +59,10 @@ class PhysicalScaler:
             "target_scale": self.target_scale,
         }
 
-    def save(self, path: str) -> None:
+    def save(self, path: str | Path) -> None:
         write_json(path, self.to_dict())
 
     @classmethod
-    def load(cls, path: str) -> "PhysicalScaler":
+    def load(cls, path: str | Path) -> "PhysicalScaler":
         payload = read_json(path)
         return cls(**payload)

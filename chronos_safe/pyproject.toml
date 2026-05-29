@@ -41,6 +41,7 @@ dev = [
 
 [project.scripts]
 chronos = "chronos_safe.apps.cli.main:main"
+chronos-web = "chronos_safe.runtime:run_web_server"
 
 [tool.setuptools]
 include-package-data = true

@@ -14,6 +14,7 @@ from chronos_safe.models.ood_guard import OODGuard
 from chronos_safe.physics.quick_integrator import QuickIntegrator
 from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
 from chronos_safe.simulation.safe_switch import evaluate_state_safety
+from chronos_safe.utils.device import get_device
 
 try:
     import torch
@@ -115,13 +116,14 @@ class HybridEngine:
         return HybridStepOutput(fallback_state, event, True, ood_score)
 
 
-def load_torch_model(checkpoint_path: str | Path) -> object:
+def load_torch_model(checkpoint_path: str | Path, device: str = "cpu") -> object:
     if torch is None:  # pragma: no cover
         raise RuntimeError("PyTorch is required to load a trained model.")
     from chronos_safe.models.residual_gnn import ResidualGNN, ResidualGNNConfig
 
-    model = ResidualGNN(ResidualGNNConfig())
-    payload = torch.load(Path(checkpoint_path), map_location="cpu")
+    resolved_device = get_device(device)
+    model = ResidualGNN(ResidualGNNConfig()).to(resolved_device)
+    payload = torch.load(Path(checkpoint_path), map_location=resolved_device)
     if "model_state_dict" in payload:
         model.load_state_dict(payload["model_state_dict"])
     else:

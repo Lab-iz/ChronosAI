@@ -6,17 +6,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from chronos_safe.config.settings import SETTINGS
-from chronos_safe.data.horizons_client import HorizonsClient
-from chronos_safe.data.scalers import PhysicalScaler
-from chronos_safe.domain.results import BenchmarkResult
 from chronos_safe.evaluation.benchmark import benchmark_rollouts
 from chronos_safe.evaluation.metrics import compare_rollouts
 from chronos_safe.evaluation.plots import write_validation_summary
-from chronos_safe.models.ood_guard import OODGuard
-from chronos_safe.physics.quick_integrator import QuickIntegrator
-from chronos_safe.physics.rebound_engine import ReboundReferenceEngine
-from chronos_safe.simulation.hybrid_engine import HybridEngine, load_torch_model
-from chronos_safe.simulation.rollout import RolloutConfig, run_hybrid_rollout
+from chronos_safe.services.simulation import build_hybrid_engine, load_fixture_state
+from chronos_safe.simulation.rollout import RolloutConfig
 from chronos_safe.utils.serialization import write_json
 
 
@@ -32,19 +26,16 @@ class ApophisValidationConfig:
 
 
 def run_apophis_validation(config: ApophisValidationConfig) -> dict[str, object]:
-    client = HorizonsClient()
-    initial_state = client.load_fixture(config.fixture_name)
-
-    model = load_torch_model(config.checkpoint_path) if config.checkpoint_path else None
-    scaler = PhysicalScaler.load(str(config.scaler_path)) if config.scaler_path else None
-    ood_guard = OODGuard.load(str(config.ood_guard_path)) if config.ood_guard_path else None
-
-    quick = QuickIntegrator(dt_days=config.dt_days)
-    reference = ReboundReferenceEngine(dt_days=config.dt_days, use_rebound=SETTINGS.use_rebound_if_available)
-    hybrid_engine = HybridEngine(quick_integrator=quick, reference_engine=reference, model=model, scaler=scaler, ood_guard=ood_guard)
+    initial_state = load_fixture_state(config.fixture_name)
+    hybrid_engine = build_hybrid_engine(
+        dt_days=config.dt_days,
+        checkpoint_path=config.checkpoint_path,
+        scaler_path=config.scaler_path,
+        ood_guard_path=config.ood_guard_path,
+    )
     rollout_config = RolloutConfig(steps=config.steps, dt_days=config.dt_days)
 
-    benchmark = benchmark_rollouts(initial_state, hybrid_engine, reference, rollout_config)
+    benchmark = benchmark_rollouts(initial_state, hybrid_engine, hybrid_engine.reference_engine, rollout_config)
     hybrid_result = benchmark["hybrid"]
     comparison_metrics = compare_rollouts(benchmark["reference"].states, hybrid_result.states)
 

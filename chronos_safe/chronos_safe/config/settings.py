@@ -15,7 +15,24 @@ from chronos_safe.config.constants import (
 )
 
 
-@dataclass(slots=True)
+TRUE_VALUES = {"1", "true", "yes", "on"}
+
+
+def _env_bool(name: str, default: bool) -> bool:
+    raw_value = os.getenv(name)
+    if raw_value is None:
+        return default
+    return raw_value.strip().lower() in TRUE_VALUES
+
+
+def _env_path(name: str, default: Path, project_root: Path) -> Path:
+    value = Path(os.getenv(name, str(default))).expanduser()
+    if value.is_absolute():
+        return value
+    return project_root / value
+
+
+@dataclass(frozen=True, slots=True)
 class Settings:
     project_root: Path
     data_root: Path
@@ -34,9 +51,9 @@ class Settings:
     @classmethod
     def from_env(cls) -> "Settings":
         project_root = Path(__file__).resolve().parents[2]
-        data_root = Path(os.getenv("CHRONOS_DATA_ROOT", project_root / "data"))
-        models_root = Path(os.getenv("CHRONOS_MODELS_ROOT", project_root / "models"))
-        reports_root = Path(os.getenv("CHRONOS_REPORTS_ROOT", project_root / "reports"))
+        data_root = _env_path("CHRONOS_DATA_ROOT", project_root / "data", project_root)
+        models_root = _env_path("CHRONOS_MODELS_ROOT", project_root / "models", project_root)
+        reports_root = _env_path("CHRONOS_REPORTS_ROOT", project_root / "reports", project_root)
         return cls(
             project_root=project_root,
             data_root=data_root,
@@ -45,7 +62,7 @@ class Settings:
             seed=int(os.getenv("CHRONOS_SEED", "42")),
             device=os.getenv("CHRONOS_DEVICE", "cpu"),
             log_level=os.getenv("CHRONOS_LOG_LEVEL", "INFO"),
-            use_rebound_if_available=os.getenv("CHRONOS_USE_REBOUND_IF_AVAILABLE", "true").lower() == "true",
+            use_rebound_if_available=_env_bool("CHRONOS_USE_REBOUND_IF_AVAILABLE", True),
             max_residual_accel_au_day2=float(
                 os.getenv("CHRONOS_MAX_RESIDUAL_ACCEL_AU_DAY2", str(DEFAULT_MAX_RESIDUAL_ACCEL_AU_DAY2))
             ),

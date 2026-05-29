@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from chronos_safe.apps.api.schemas import GenerateGeneralistRequest, GenerateSpecialistRequest
 from chronos_safe.data.specialist_generator import SpecialistGenerationConfig, generate_specialist_dataset
@@ -29,12 +29,15 @@ def generate_generalist(request: GenerateGeneralistRequest) -> dict[str, object]
 
 @router.post("/specialist")
 def generate_specialist(request: GenerateSpecialistRequest) -> dict[str, object]:
-    output_dir = generate_specialist_dataset(
-        SpecialistGenerationConfig(
-            output_dir=Path(request.output_dir),
-            fixture_name=request.fixture_name,
-            num_samples=request.num_samples,
-            dt_days=request.dt_days,
+    try:
+        output_dir = generate_specialist_dataset(
+            SpecialistGenerationConfig(
+                output_dir=Path(request.output_dir),
+                fixture_name=request.fixture_name,
+                num_samples=request.num_samples,
+                dt_days=request.dt_days,
+            )
         )
-    )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=f"Fixture not found: {request.fixture_name}") from exc
     return {"status": "ok", "kind": "specialist", "output_dir": str(output_dir.as_posix())}
