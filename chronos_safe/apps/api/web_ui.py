@@ -1024,7 +1024,7 @@ input, select, textarea, button {
       word-break: break-word;
     }
 
-    @media (max-width: 980px) {
+    @média (max-width: 980px) {
       .hero,
       .grid,
       .row,
@@ -1087,7 +1087,7 @@ input, select, textarea, button {
       }
     }
 
-    @media (max-width: 680px) {
+    @média (max-width: 680px) {
       body::before,
       body::after {
         opacity: 0.5;
@@ -1211,11 +1211,11 @@ input, select, textarea, button {
   <div class="shell">
     <section class="hero">
       <div class="hero-card">
-        <p style="margin:0 0 10px;color:var(--accent-soft);font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Aula para criancas</p>
+        <p style="margin:0 0 10px;color:var(--accent-soft);font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Aula para crianças</p>
         <h1>Apophis em 3D</h1>
         <p class="subtitle">
-          Esta tela ensina com desenho. Apophis e uma grande pedra do espaco que vai passar perto da Terra em 2029, sem bater.
-          Aperte um botao, veja os caminhos e leia a cor: verde, amarelo ou vermelho.
+          Esta tela ensina com desenho. Apophis é uma grande pedra do espaço que vai passar perto da Terra em 2029, sem bater.
+          Aperte um botão, veja os caminhos e leia a cor: verde, amarelo ou vermelho.
         </p>
         <div class="badge-row">
           <span class="badge">Passagem segura em 2029</span>
@@ -1244,41 +1244,41 @@ input, select, textarea, button {
       <article class="hero-card guide-card">
         <div class="guide-step">1</div>
         <h2>Aperte</h2>
-        <p>Use o botao de desenho 3D. A aula ja comeca pronta.</p>
+        <p>Use o botão de desenho 3D. A aula já começa pronta.</p>
       </article>
       <article class="hero-card guide-card">
         <div class="guide-step">2</div>
         <h2>Olhe</h2>
-        <p>Veja Sol, Terra e Apophis se mexendo. Cada linha e um caminho no espaco.</p>
+        <p>Veja Sol, Terra e Apophis se mexendo. Cada linha é um caminho no espaço.</p>
       </article>
       <article class="hero-card guide-card">
         <div class="guide-step">3</div>
         <h2>Entenda a cor</h2>
-        <p>Verde: pode olhar. Amarelo: chame o professor. Vermelho: nao confie ainda.</p>
+        <p>Verde: pode olhar. Amarelo: chame o professor. Vermelho: não confie ainda.</p>
       </article>
     </section>
 
     <section class="panel explanation-panel">
       <div>
-        <span class="results-kicker">O que voce aprende</span>
+        <span class="results-kicker">O que você aprende</span>
         <h2>Muitos corpos puxando uns aos outros</h2>
         <p class="summary-copy">
-          Corpo pode ser Sol, planeta, Lua ou asteroide. N-corpos quer dizer "quantos corpos voce quiser".
+          Corpo pode ser Sol, planeta, Lua ou asteroide. N-corpos quer dizer "quantos corpos você quiser".
           Nesta aula, Sol, Terra e Apophis puxam uns aos outros pela gravidade. O computador desenha o caminho que aparece dessa puxada.
         </p>
       </div>
       <div class="usage-grid">
         <div class="usage-item">
-          <strong>O que e Apophis?</strong>
-          Uma pedra grande do espaco. Ela vai passar perto da Terra em 13 de abril de 2029, sem bater.
+          <strong>O que é Apophis?</strong>
+          Uma pedra grande do espaço. Ela vai passar perto da Terra em 13 de abril de 2029, sem bater.
         </div>
         <div class="usage-item">
           <strong>Por que estudar?</strong>
-          Para ver se a Terra muda o caminho, o giro ou a superficie dessa pedra quando ela passa perto.
+          Para ver se a Terra muda o caminho, o giro ou a superfície dessa pedra quando ela passa perto.
         </div>
         <div class="usage-item">
-          <strong>O que e simular?</strong>
-          E fazer uma conta para imaginar o movimento antes de ele acontecer de verdade.
+          <strong>O que é simular?</strong>
+          É fazer uma conta para imaginar o movimento antes de ele acontecer de verdade.
         </div>
       </div>
       <p class="hint">
@@ -1292,7 +1292,7 @@ input, select, textarea, button {
     <section class="panel summary-panel">
       <h2>Comece aqui</h2>
       <p class="summary-copy">
-        Para usar sem pensar, faca so estes dois passos. Primeiro veja o desenho. Depois veja se o desenho ficou bom no semaforo.
+        Para usar sem pensar, faça so estes dois passos. Primeiro veja o desenho. Depois veja se o desenho ficou bom no semáforo.
       </p>
       <div class="summary-actions">
         <button id="quick-demo-button" type="button">1. Ver desenho</button>
@@ -1309,7 +1309,7 @@ input, select, textarea, button {
           <span class="results-kicker">Mexa so se quiser</span>
           <h2>Aula pronta</h2>
           <p class="simulator-copy">
-            O melhor caminho para uma crianca e nao mudar nada. Se quiser testar, mude so os pontinhos ou os dias por pulinho.
+            O melhor caminho para uma crianca e não mudar nada. Se quiser testar, mude so os pontinhos ou os dias por pulinho.
           </p>
         </div>
         <div class="example-actions">
@@ -1334,7 +1334,7 @@ input, select, textarea, button {
           <input type="number" name="dt_days" value="1.0" min="0.01" step="0.01">
         </label>
         <details class="teacher-tools wide">
-          <summary>Area do professor</summary>
+          <summary>Área do professor</summary>
           <div class="teacher-grid">
             <label>
               <span class="field-title">Ajuda treinada</span>
@@ -1342,20 +1342,20 @@ input, select, textarea, button {
               <select name="checkpoint_path" data-select="checkpoints" data-allow-empty="true"></select>
             </label>
             <label>
-              <span class="field-title">Regua da ajuda</span>
+              <span class="field-title">Régua da ajuda</span>
               <span class="field-help">Opcional. Mantem a ajuda treinada na mesma escala dos exemplos usados no treino.</span>
               <select name="scaler_path" data-select="scalers" data-allow-empty="true"></select>
             </label>
             <label>
               <span class="field-title">Alarme de seguranca</span>
-              <span class="field-help">Opcional. Avisa quando a ajuda treinada nao parece confiavel para aquele passo.</span>
+              <span class="field-help">Opcional. Avisa quando a ajuda treinada não parece confiavel para aquele passo.</span>
               <select name="ood_guard_path" data-select="ood_guards" data-allow-empty="true"></select>
             </label>
             <div class="payload-editor wide">
               <div class="payload-editor-head">
                 <div>
                   <h3>Dados por dentro</h3>
-                  <p class="payload-help">Area do professor. A crianca nao precisa mexer aqui.</p>
+                  <p class="payload-help">Área do professor. A crianca não precisa mexer aqui.</p>
                 </div>
                 <button id="sync-payload-button" type="button" class="secondary">Atualizar dados</button>
               </div>
@@ -1368,7 +1368,7 @@ input, select, textarea, button {
           <button type="submit">Mostrar desenho</button>
         </div>
       </form>
-      <p class="hint">Verde mostra um caminho bom. Vermelho mostra como fica quando o computador avisa que nao devemos confiar.</p>
+      <p class="hint">Verde mostra um caminho bom. Vermelho mostra como fica quando o computador avisa que não devemos confiar.</p>
     </section>
 
     <section class="panel visual-section">
@@ -1383,7 +1383,7 @@ input, select, textarea, button {
     </section>
 
     <details class="advanced-shell">
-      <summary>Area do professor: criar exemplos, explicar epocas e revisar Apophis</summary>
+      <summary>Área do professor: criar exemplos, explicar épocas e revisar Apophis</summary>
       <div class="grid">
       <section class="panel">
         <h2>1. Criar exemplos de estudo</h2>
@@ -1401,10 +1401,10 @@ input, select, textarea, button {
               </label>
             </div>
             <div class="row">
-              <label>Minimo de corpos
+              <label>Mínimo de corpos
                 <input type="number" name="min_bodies" value="2" min="2">
               </label>
-              <label>Maximo de corpos
+              <label>Máximo de corpos
                 <input type="number" name="max_bodies" value="6" min="2">
               </label>
             </div>
@@ -1429,12 +1429,12 @@ input, select, textarea, button {
             <button type="submit" class="secondary">Criar exemplos desta aula</button>
           </form>
         </div>
-        <p class="hint">Esses arquivos servem para ensinar a ajuda do computador. Se voce so quer usar a aula visual, ignore esta parte.</p>
+        <p class="hint">Esses arquivos servem para ensinar a ajuda do computador. Se você so quer usar a aula visual, ignore esta parte.</p>
       </section>
 
       <section class="panel">
         <h2>2. Ensinar a ajuda do computador</h2>
-        <p class="hint">Epocas sao rodadas de estudo. 1 epoca quer dizer: o computador olhou todos os exemplos uma vez. Mais epocas podem ensinar melhor, mas demoram mais.</p>
+        <p class="hint">Épocas sao rodadas de estudo. 1 época quer dizer: o computador olhou todos os exemplos uma vez. Mais épocas podem ensinar melhor, mas demoram mais.</p>
         <div class="row">
           <form id="train-generalist-form">
             <label>Exemplos gerais
@@ -1444,7 +1444,7 @@ input, select, textarea, button {
               <input type="text" name="output_dir" data-fill="generalist_checkpoint_dir">
             </label>
             <div class="row">
-              <label>Epocas
+              <label>Épocas
                 <span class="field-help">Quantas vezes o computador olha todos os exemplos.</span>
                 <input type="number" name="epochs" value="10" min="1">
               </label>
@@ -1466,7 +1466,7 @@ input, select, textarea, button {
               <input type="text" name="output_dir" data-fill="specialist_checkpoint_dir">
             </label>
             <div class="row">
-              <label>Epocas
+              <label>Épocas
                 <span class="field-help">Quantas voltas de estudo o computador faz.</span>
                 <input type="number" name="epochs" value="6" min="1">
               </label>
@@ -1495,7 +1495,7 @@ input, select, textarea, button {
             <label>Ajuda treinada
               <select name="checkpoint_path" data-select="checkpoints" data-allow-empty="true"></select>
             </label>
-            <label>Regua da ajuda
+            <label>Régua da ajuda
               <select name="scaler_path" data-select="scalers" data-allow-empty="true"></select>
             </label>
           </div>
@@ -1521,7 +1521,7 @@ input, select, textarea, button {
         <div class="results-topline">
           <div class="results-title">
             <span class="results-kicker">Resposta da aula</span>
-            <h2 id="results-heading" class="results-heading">Aperte um botao para comecar</h2>
+            <h2 id="results-heading" class="results-heading">Aperte um botão para comecar</h2>
             <p id="results-subtitle" class="results-subtitle">A tela vai mostrar o desenho, a cor e uma frase simples.</p>
           </div>
           <div id="results-badges" class="results-badges"></div>
@@ -1529,7 +1529,7 @@ input, select, textarea, button {
         <div id="risk-banner" class="risk-banner" data-level="neutral">
           <div class="risk-light"></div>
           <div class="risk-copy">
-            <span class="risk-kicker">Semaforo</span>
+            <span class="risk-kicker">Semáforo</span>
             <strong id="risk-title" class="risk-title">Ainda sem cor</strong>
             <span id="risk-description" class="risk-description">Clique em Ver desenho ou Ver Apophis.</span>
           </div>
@@ -1540,7 +1540,7 @@ input, select, textarea, button {
           <div id="risk-reason-body" class="risk-reason-list">
             <div class="risk-reason-row">
               <strong>Aguardando dados</strong>
-              <span>Quando o desenho rodar, esta area explica a cor com palavras simples.</span>
+              <span>Quando o desenho rodar, esta área explica a cor com palavras simples.</span>
             </div>
           </div>
         </div>
@@ -1548,7 +1548,7 @@ input, select, textarea, button {
           <div class="results-stack">
             <div id="metric-grid" class="metric-grid"></div>
             <div class="detail-card">
-              <h3>Leitura rapida</h3>
+              <h3>Leitura rápida</h3>
               <div id="primary-details-body" class="kv-list"></div>
             </div>
           </div>
@@ -1589,7 +1589,7 @@ input, select, textarea, button {
         return value.toExponential(3);
       }
       if (value === null || value === undefined) return "n/a";
-      if (typeof value === "boolean") return value ? "sim" : "nao";
+      if (typeof value === "boolean") return value ? "sim" : "não";
       return String(value);
     }
 
@@ -1621,7 +1621,7 @@ input, select, textarea, button {
 
     function metricText(value, unit) {
       if (!isFiniteNumber(value)) {
-        return "nao apareceu nos dados";
+        return "não apareceu nos dados";
       }
       return `${formatValue(value)}${unit ? ` ${unit}` : ""}`;
     }
@@ -1644,9 +1644,9 @@ input, select, textarea, button {
       const labels = {
         energy_drift: "energia mudou demais",
         angular_momentum_drift: "giro mudou demais",
-        speed_limit: "ficou rapido demais",
+        speed_limit: "ficou rápido demais",
         distance_limit: "ficou longe demais",
-        ood_score: "computador ficou em duvida",
+        ood_score: "computador ficou em dúvida",
         security_correction: "aviso de cuidado",
         fallback: "aviso de cuidado",
       };
@@ -1665,7 +1665,7 @@ input, select, textarea, button {
         return [
           makeReason("Desenho parecido", "O caminho ficou muito parecido com a conta usada para conferir."),
           makeReason("Movimento normal", "Os corpos se mexeram sem sinais estranhos."),
-          makeReason("Sem aviso", "A plataforma nao precisou pedir ajuda extra."),
+          makeReason("Sem aviso", "A plataforma não precisou pedir ajuda extra."),
         ];
       }
 
@@ -1682,7 +1682,7 @@ input, select, textarea, button {
         "Ponto final diferente",
         values.finalError,
         "unidade Terra-Sol",
-        "O caminho terminou longe da conta usada para conferir; 1 unidade Terra-Sol e a distancia media entre a Terra e o Sol."
+        "O caminho terminou longe da conta usada para conferir; 1 unidade Terra-Sol é a distância média entre a Terra e o Sol."
       );
       addMetricReason(
         reasons,
@@ -1690,7 +1690,7 @@ input, select, textarea, button {
         "Terra e Apophis ficaram diferentes",
         values.earthError,
         "unidade Terra-Sol",
-        "A distancia entre Terra e Apophis ficou diferente do esperado."
+        "A distância entre Terra e Apophis ficou diferente do esperado."
       );
       addMetricReason(
         reasons,
@@ -1698,7 +1698,7 @@ input, select, textarea, button {
         "Avisos de cuidado",
         values.fallbackCount,
         "",
-        `A plataforma pediu ajuda extra porque ficou em duvida naquele trecho.${fallbackDetail ? ` Motivos: ${fallbackDetail}.` : ""}`
+        `A plataforma pediu ajuda extra porque ficou em dúvida naquele trecho.${fallbackDetail ? ` Motivos: ${fallbackDetail}.` : ""}`
       );
       addMetricReason(
         reasons,
@@ -1706,7 +1706,7 @@ input, select, textarea, button {
         "Energia mudou demais",
         values.energyDrift,
         "",
-        "Quando isso fica alto, o desenho pode nao estar bom."
+        "Quando isso fica alto, o desenho pode não estar bom."
       );
       addMetricReason(
         reasons,
@@ -1811,7 +1811,7 @@ input, select, textarea, button {
 
       return makeRisk(
         "red",
-        "Nao confie ainda",
+        "Não confie ainda",
         "O desenho se afastou demais. Precisa revisar.",
         "vermelho",
         validationRiskReasons(payload, "red", values)
@@ -1846,7 +1846,7 @@ input, select, textarea, button {
 
       return makeRisk(
         "red",
-        "Nao confie ainda",
+        "Não confie ainda",
         "O computador avisou que este desenho pode estar ruim.",
         "vermelho",
         trajectoryRiskReasons(payload, "red", values)
@@ -1899,7 +1899,7 @@ input, select, textarea, button {
     function renderRiskBanner(risk) {
       const banner = document.getElementById("risk-banner");
       banner.setAttribute("data-level", risk.level || "neutral");
-      document.getElementById("risk-title").textContent = risk.title || "Sem classificacao";
+      document.getElementById("risk-title").textContent = risk.title || "Sem classificação";
       document.getElementById("risk-description").textContent = risk.description || "Sem descricao disponivel.";
       document.getElementById("risk-pill").textContent = risk.pill || "neutro";
       const explanation = document.getElementById("risk-explain");
@@ -1922,11 +1922,11 @@ input, select, textarea, button {
           ["Pontos no caminho", payload.steps],
           ["Dias por ponto", payload.dt_days],
           ["Ajuda treinada", payload.checkpoint_path],
-          ["Regua da ajuda", payload.scaler_path],
-          ["Diferenca media de posicao (Terra-Sol)", payload.comparison_metrics?.mean_position_error_au],
-          ["Diferenca media de velocidade (Terra-Sol por dia)", payload.comparison_metrics?.mean_velocity_error_au_day],
+          ["Régua da ajuda", payload.scaler_path],
+          ["Diferenca média de posição (Terra-Sol)", payload.comparison_metrics?.mean_position_error_au],
+          ["Diferenca média de velocidade (Terra-Sol por dia)", payload.comparison_metrics?.mean_velocity_error_au_day],
           ["Diferenca Terra-Apophis (Terra-Sol)", payload.comparison_metrics?.earth_apophis_distance_error_au],
-          ["Tempo da conta rapida (s)", hybrid.runtime_seconds],
+          ["Tempo da conta rápida (s)", hybrid.runtime_seconds],
           ["Taxa de aviso", hybridMetrics.fallback_rate],
         ];
         return {
@@ -1966,7 +1966,7 @@ input, select, textarea, button {
           detailEntries: [
             ["Aula", payload.source],
             ["Dias por ponto", payload.dt_days],
-            ["Distancia Terra-Apophis final (Terra-Sol)", metrics.earth_apophis_distance_final_au],
+            ["Distância Terra-Apophis final (Terra-Sol)", metrics.earth_apophis_distance_final_au],
             ["Avisos de cuidado", (payload.fallback_events || []).length],
           ],
           fallbackEvents: payload.fallback_events || [],
@@ -1978,23 +1978,23 @@ input, select, textarea, button {
         const history = payload.history || [];
         return {
           heading: "Computador estudou",
-          subtitle: "Epoca e uma volta de estudo por todos os exemplos.",
+          subtitle: "Época e uma volta de estudo por todos os exemplos.",
           badges: [
             badgeHtml("aprendizado"),
-            badgeHtml(`melhor epoca ${payload.best_epoch}`),
-            badgeHtml(`epocas ${history.length}`),
+            badgeHtml(`melhor época ${payload.best_epoch}`),
+            badgeHtml(`épocas ${history.length}`),
           ],
           metricCards: [
-            ["Melhor epoca", payload.best_epoch],
+            ["Melhor época", payload.best_epoch],
             ["Menor erro de aprendizado", payload.best_val_loss],
-            ["Epocas feitas", history.length],
+            ["Épocas feitas", history.length],
             ["Status", "concluido"],
           ],
           detailEntries: [
             ["Exemplos", payload.dataset_dir],
             ["Pasta", payload.output_dir],
             ["Ajuda treinada", payload.checkpoint_path],
-            ["Regua da ajuda", payload.scaler_path],
+            ["Régua da ajuda", payload.scaler_path],
             ["Alarme de seguranca", payload.ood_guard_path],
             ...(history.length ? Object.entries(history[history.length - 1]) : []),
           ],
@@ -2024,18 +2024,18 @@ input, select, textarea, button {
       if (payload && payload.status && payload.version) {
         return {
           heading: "Teste da plataforma",
-          subtitle: "Resposta simples para confirmar que a aplicacao esta disponivel.",
+          subtitle: "Resposta simples para confirmar que a aplicação esta disponivel.",
           badges: [
             badgeHtml(`status ${payload.status}`),
-            badgeHtml(`versao ${payload.version}`),
+            badgeHtml(`versão ${payload.version}`),
           ],
           metricCards: [
             ["Status", payload.status],
-            ["Versao", payload.version],
+            ["Versão", payload.version],
           ],
           detailEntries: Object.entries(payload),
           fallbackEvents: [],
-          risk: makeRisk("green", "Plataforma disponivel", "A aplicacao respondeu normalmente e esta pronta para uso.", "verde"),
+          risk: makeRisk("green", "Plataforma disponivel", "A aplicação respondeu normalmente e esta pronta para uso.", "verde"),
         };
       }
 
@@ -2060,7 +2060,7 @@ input, select, textarea, button {
         : `<div class="empty-card">Nada importante para mostrar aqui.</div>`;
       document.getElementById("primary-details-body").innerHTML = kvRowsHtml(report.detailEntries);
       document.getElementById("fallback-body").innerHTML = fallbackRowsHtml(report.fallbackEvents);
-      renderRiskBanner(report.risk || makeRisk("yellow", "Sem classificacao", "Nao foi possivel classificar o risco desta resposta.", "amarelo"));
+      renderRiskBanner(report.risk || makeRisk("yellow", "Sem classificação", "Não foi possivel classificar o risco desta resposta.", "amarelo"));
     }
 
     function setOutput(payload) {
@@ -2153,10 +2153,10 @@ input, select, textarea, button {
         return JSON.parse(editor.value || "{}");
       } catch (error) {
         setOutput({
-          error: `Dados editados invalidos: ${error.message}`,
+          error: `Dados editados inválidos: ${error.message}`,
           endpoint: "/simulate/trajectory",
         });
-        setStatus(`Erro: dados editados invalidos (${error.message})`);
+        setStatus(`Erro: dados editados inválidos (${error.message})`);
         return null;
       }
     }
@@ -2186,7 +2186,7 @@ input, select, textarea, button {
           { step: 4, time_days: 28, reason: "speed_limit", affected_bodies: ["Apophis"], score: 0.97, action: "fallback_to_reference_engine" },
           { step: 5, time_days: 35, reason: "distance_limit", affected_bodies: ["Earth", "Apophis"], score: 0.99, action: "fallback_to_reference_engine" },
         ],
-        note: "Exemplo demonstrativo para mostrar o semaforo vermelho quando nao devemos confiar no desenho.",
+        note: "Exemplo demonstrativo para mostrar o semáforo vermelho quando não devemos confiar no desenho.",
       };
     }
 
@@ -2194,7 +2194,7 @@ input, select, textarea, button {
       const payload = buildRedExamplePayload();
       setOutput(payload);
       renderTrajectory3D(payload);
-      setStatus("Vermelho carregado: exemplo de quando nao devemos confiar ainda.");
+      setStatus("Vermelho carregado: exemplo de quando não devemos confiar ainda.");
     }
 
     function applyTrainingArtifacts(payload) {

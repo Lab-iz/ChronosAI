@@ -1,3 +1,0 @@
-# AUTHORS
-
-- Gabriel Azevedo Marques
